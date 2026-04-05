@@ -48,7 +48,10 @@ public class MouseLookController : MonoBehaviour, IPauseable
         float ver = look.y;
 
         if (Mathf.Abs(hor) > float.Epsilon) {
-            body.Rotate(Vector3.up, hor * mouseSpeed);
+            Quaternion rot = head.localRotation;
+            Quaternion aim = Quaternion.AngleAxis(-0.5f * verticalAngle * Mathf.Sign(hor), Vector3.up);
+            Quaternion delta = Quaternion.RotateTowards(rot, aim, Mathf.Sign(hor) * hor * mouseSpeed);
+            head.localRotation = delta;
         }
 
         if (Mathf.Abs(ver) > float.Epsilon) {
