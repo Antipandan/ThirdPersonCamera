@@ -19,30 +19,13 @@ namespace DefaultNamespace
             get => isPlaying;
             set => isPlaying = value;
         }
-
-        private void Start()
-        {
-            
-        }
-
-        // den är här ifall man vill aktivera kamera åkning via knapp tryckning
-        public void SwitchControll(InputAction.CallbackContext context)
-        {
-            if (context.performed)
-            {
-                SwitchControll();
-            }
-        }
-
-        // holy spaghetti
+        
         public void SwitchControll()
         {
             // xor bitwise operation
             isPlaying ^= true;
-            if (lockCamereMovement)
-            {
-                if (mouseLookController != null) mouseLookController.Pause();
-            }
+            if (mouseLookController != null && lockCamereMovement) mouseLookController.Pause();
+            
         }
     }
 }
