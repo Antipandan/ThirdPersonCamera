@@ -11,7 +11,6 @@ namespace DefaultNamespace
     {
         [SerializeField] private bool lockCamereMovement;
         [SerializeField] [CanBeNull] private MouseLookController mouseLookController;
-        [SerializeField] private bool loop = false;
         private bool isPlaying = false;
 
         public bool IsPaused

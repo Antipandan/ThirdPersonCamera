@@ -46,20 +46,27 @@ public class MouseLookController : MonoBehaviour, IPauseable
         Vector2 look = lookAction.ReadValue<Vector2>() * 0.1f;
         float hor = look.x;
         float ver = look.y;
+        
 
-        if (Mathf.Abs(hor) > float.Epsilon) {
-            Quaternion rot = head.localRotation;
-            Quaternion aim = Quaternion.AngleAxis(-0.5f * verticalAngle * Mathf.Sign(hor), Vector3.up);
-            Quaternion delta = Quaternion.RotateTowards(rot, aim, Mathf.Sign(hor) * hor * mouseSpeed);
-            head.localRotation = delta;
+        if (Mathf.Abs(hor) > float.Epsilon)
+        {
+            int rotationSign = UtilityFunctions.GetSign(hor);
+            Quaternion currentHeadRotation = head.localRotation;
+            Quaternion maxRotation = Quaternion.AngleAxis(0.5f * verticalAngle * rotationSign, Vector3.up);
+            Quaternion angleToRotate = Quaternion.RotateTowards(currentHeadRotation, maxRotation, rotationSign * hor * mouseSpeed);
+            head.localRotation = angleToRotate;
         }
-
-        if (Mathf.Abs(ver) > float.Epsilon) {
+        
+        /*
+         *         if (Mathf.Abs(ver) > float.Epsilon) 
+        {
             Quaternion rot = head.localRotation;
             Quaternion aim = Quaternion.AngleAxis(-0.5f * verticalAngle * Mathf.Sign(ver), Vector3.right);
             Quaternion delta = Quaternion.RotateTowards(rot, aim, Mathf.Sign(ver) * ver * mouseSpeed);
+            delta.eulerAngles = new Vector3(delta.eulerAngles.x, delta.eulerAngles.y, 0);
             head.localRotation = delta;
         }
+         */
     }
     
 }
