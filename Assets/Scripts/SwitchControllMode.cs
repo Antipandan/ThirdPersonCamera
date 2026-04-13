@@ -3,7 +3,6 @@ using JetBrains.Annotations;
 using TMPro.Examples;
 using UnityEngine;
 using UnityEngine.InputSystem;
-using UnityEngine.Splines;
 
 namespace DefaultNamespace
 {
@@ -13,7 +12,6 @@ namespace DefaultNamespace
         [SerializeField] private bool lockCamereMovement;
         [SerializeField] [CanBeNull] private MouseLookController mouseLookController;
         [SerializeField] private bool loop = false;
-        [SerializeField] private SplineAnimate splineAnimationController;
         private bool isPlaying = false;
 
         public bool IsPaused
@@ -25,7 +23,7 @@ namespace DefaultNamespace
         private void Start()
         {
             // vill vara säker att spline Animate är sätt till false
-            splineAnimationController.PlayOnAwake = false;
+            return;
         }
 
         // den är här ifall man vill aktivera kamera åkning via knapp tryckning
@@ -45,15 +43,6 @@ namespace DefaultNamespace
             if (lockCamereMovement)
             {
                 if (mouseLookController != null) mouseLookController.Pause();
-            }
-            if (splineAnimationController == null) return;
-            if (isPlaying)
-            {
-                splineAnimationController.Play();
-            }
-            else
-            {
-                splineAnimationController.Pause();
             }
         }
     }
