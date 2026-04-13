@@ -3,7 +3,12 @@ guid: cd693151b8dd1aa4896e3d57fe956a9a
 ModelImporter:
   serializedVersion: 22200
   internalIDToNameTable: []
-  externalObjects: {}
+  externalObjects:
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: brass_pan_01
+    second: {fileID: 2100000, guid: c944574162d80944db6571f1420c4b80, type: 2}
   materials:
     materialImportMode: 2
     materialName: 0

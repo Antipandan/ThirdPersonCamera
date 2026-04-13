@@ -3,7 +3,22 @@ guid: 84dde2a61298179468a98f1ee3c09c88
 ModelImporter:
   serializedVersion: 22200
   internalIDToNameTable: []
-  externalObjects: {}
+  externalObjects:
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: lantern_chandelier_01
+    second: {fileID: 2100000, guid: d6a491c8ba05c924da70bd549da4cd80, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: lantern_chandelier_01_glass
+    second: {fileID: 2100000, guid: 87119aca9ba9bae46a42a76796baebc5, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: lantern_chandelier_01_lamp
+    second: {fileID: 2100000, guid: a6891adc3c9b9434d8ced60c501e02f4, type: 2}
   materials:
     materialImportMode: 2
     materialName: 0

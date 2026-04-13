@@ -3,7 +3,22 @@ guid: 3ac50b19edf0e80469abec1438380c06
 ModelImporter:
   serializedVersion: 22200
   internalIDToNameTable: []
-  externalObjects: {}
+  externalObjects:
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: modern_ceiling_globe
+    second: {fileID: 2100000, guid: 99783e110e5d3ee4991f8e745489073a, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: modern_ceiling_lamp_01
+    second: {fileID: 2100000, guid: 91069601746af0743b25c0b00766b5fb, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: modern_ceiling_lamp_01_glass
+    second: {fileID: 2100000, guid: 72f7e3263aafeb24498f1f46a7839bf1, type: 2}
   materials:
     materialImportMode: 2
     materialName: 0

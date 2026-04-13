@@ -3,7 +3,12 @@ guid: de126578736189c41874f40cb86305f5
 ModelImporter:
   serializedVersion: 22200
   internalIDToNameTable: []
-  externalObjects: {}
+  externalObjects:
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: painted_wooden_cabinet
+    second: {fileID: 2100000, guid: f4dd8751c99f87f4d93620f050020cc0, type: 2}
   materials:
     materialImportMode: 2
     materialName: 0

@@ -52,7 +52,6 @@ public class PauseGameManager : MonoBehaviour
 
     public void PauseGame()
     {
-        Debug.Log($"PauseGame!");
         //xor
         isPaused ^= true;
         onGamePause?.Invoke();

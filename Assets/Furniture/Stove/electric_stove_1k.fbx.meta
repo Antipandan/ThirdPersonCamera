@@ -3,7 +3,17 @@ guid: 931c18650ca5f6b4d9b6a3f5ac1cb665
 ModelImporter:
   serializedVersion: 22200
   internalIDToNameTable: []
-  externalObjects: {}
+  externalObjects:
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: electric_stove
+    second: {fileID: 2100000, guid: 929143d250330f34b836e1c4f3122a41, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: electric_stove_glass
+    second: {fileID: 2100000, guid: 6f30e85f32eccba449add4064adc3bbb, type: 2}
   materials:
     materialImportMode: 2
     materialName: 0

@@ -3,7 +3,12 @@ guid: 585c2546abf3b2f47a36ba0ac7ceef2c
 ModelImporter:
   serializedVersion: 22200
   internalIDToNameTable: []
-  externalObjects: {}
+  externalObjects:
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: picke_dirty_01
+    second: {fileID: 2100000, guid: e394e0af158ad604e9ba6ed60186d96f, type: 2}
   materials:
     materialImportMode: 2
     materialName: 0

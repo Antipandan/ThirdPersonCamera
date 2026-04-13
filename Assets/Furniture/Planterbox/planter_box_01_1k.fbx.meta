@@ -3,7 +3,12 @@ guid: 146c30b199bdfb74692ce461c992ef3d
 ModelImporter:
   serializedVersion: 22200
   internalIDToNameTable: []
-  externalObjects: {}
+  externalObjects:
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: planter_box_01
+    second: {fileID: 2100000, guid: 5e41601ba89a344428cf3f1ba8676c37, type: 2}
   materials:
     materialImportMode: 2
     materialName: 0
