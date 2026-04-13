@@ -26,7 +26,6 @@ namespace DefaultNamespace
             return;
         }
 
-        // den är här ifall man vill aktivera kamera åkning via knapp tryckning
         public void SwitchControll(InputAction.CallbackContext context)
         {
             if (context.performed)
@@ -35,7 +34,6 @@ namespace DefaultNamespace
             }
         }
 
-        // holy spaghetti
         public void SwitchControll()
         {
             // xor bitwise operation
