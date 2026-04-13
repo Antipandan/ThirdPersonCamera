@@ -1,7 +1,7 @@
 using System;
 using UnityEngine;
 
-public class OnTriggerEntered : MonoBehaviour
+public class onCameraCollide : MonoBehaviour
 {
     private bool canBeTriggered = true;
     private Rigidbody objectRidigbody;

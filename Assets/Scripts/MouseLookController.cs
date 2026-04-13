@@ -3,6 +3,7 @@ using System.Runtime.CompilerServices;
 using DefaultNamespace;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.TextCore.Text;
 
 [Serializable]
 public class MouseLookController : MonoBehaviour, IPauseable
@@ -21,13 +22,14 @@ public class MouseLookController : MonoBehaviour, IPauseable
     
     private InputAction lookAction;
     private bool isPaused;
-    private Vector3 originalCameraPosition;
+    
+    private CharacterController controller;
     
     public bool IsPaused => isPaused;
 
     private void Awake()
     {
-        originalCameraPosition = head.GetComponentInChildren<Camera>().transform.position;
+        controller = gameObject.GetComponent<CharacterController>();
     }
 
     private void Start()
@@ -47,7 +49,6 @@ public class MouseLookController : MonoBehaviour, IPauseable
 
     private void Update()
     {
-
         if (!isPaused)
         {
             MouseLook();
