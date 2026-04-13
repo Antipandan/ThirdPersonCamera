@@ -21,8 +21,14 @@ public class MouseLookController : MonoBehaviour, IPauseable
     
     private InputAction lookAction;
     private bool isPaused;
+    private Vector3 originalCameraPosition;
     
     public bool IsPaused => isPaused;
+
+    private void Awake()
+    {
+        originalCameraPosition = head.GetComponentInChildren<Camera>().transform.position;
+    }
 
     private void Start()
     {
@@ -30,6 +36,7 @@ public class MouseLookController : MonoBehaviour, IPauseable
         if (body == null) body = gameObject.transform;
         lookAction = InputSystem.actions.FindAction("Look");
     }
+    
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public void Pause()
@@ -40,6 +47,7 @@ public class MouseLookController : MonoBehaviour, IPauseable
 
     private void Update()
     {
+
         if (!isPaused)
         {
             MouseLook();
