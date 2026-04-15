@@ -19,17 +19,19 @@ public class MouseLookController : MonoBehaviour, IPauseable
 
     [SerializeField, Range(0, 180)]
     private float verticalAngle = 160;
+
+    [SerializeField] 
+    private CustomEvents customEvents;
     
     private InputAction lookAction;
     private bool isPaused;
     
-    private CharacterController controller;
     
     public bool IsPaused => isPaused;
 
     private void Awake()
     {
-        controller = gameObject.GetComponent<CharacterController>();
+        return;
     }
 
     private void Start()

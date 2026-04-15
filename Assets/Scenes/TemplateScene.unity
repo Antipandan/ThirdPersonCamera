@@ -16568,6 +16568,7 @@ GameObject:
   - component: {fileID: 1498205431}
   - component: {fileID: 1498205435}
   - component: {fileID: 1498205436}
+  - component: {fileID: 1498205439}
   - component: {fileID: 1498205437}
   - component: {fileID: 1498205438}
   m_Layer: 0
@@ -16870,6 +16871,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 072a62362ac385f4e868266869321f5a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  objectCamera: {fileID: 1498205430}
+  player: {fileID: 1522075678}
+  customEvents: {fileID: 1498205439}
 --- !u!135 &1498205437
 SphereCollider:
   m_ObjectHideFlags: 0
@@ -16918,6 +16922,18 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
+--- !u!114 &1498205439
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1498205426}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bef182d97ac2423bb991a318f7f4d087, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1504829756
 GameObject:
   m_ObjectHideFlags: 0
@@ -17520,6 +17536,7 @@ MonoBehaviour:
   body: {fileID: 1522075679}
   mouseSpeed: 1
   verticalAngle: 160
+  customEvents: {fileID: 1498205439}
 --- !u!114 &1522075681
 MonoBehaviour:
   m_ObjectHideFlags: 0
