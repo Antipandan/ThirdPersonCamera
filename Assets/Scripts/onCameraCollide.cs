@@ -1,45 +1,66 @@
 using System;
 using DefaultNamespace;
+using Unity.Mathematics;
 using UnityEngine;
 
+[RequireComponent(typeof(Rigidbody))]
 public class onCameraCollide : MonoBehaviour
 {
-    [SerializeField] private Camera objectCamera;
-    [SerializeField] private GameObject player;
-    [SerializeField] private CustomEvents customEvents;
-    private bool canBeTriggered = true;
+    [SerializeField] private Transform player;
+    [SerializeField] private Transform headTransform;
     private Rigidbody objectRidigbody; 
-    private bool isFollowing;
+    private bool isFollowing = true;
+    private float distanceCameraPlayer;
+    private Transform oldHeadTransform;
+    private Vector3 oldCameraPosition;
+    private Quaternion oldCameraRotation;
     
     private void Awake()
     {
-        customEvents.OnFollowChange += ChangeIsFollowing;
+        oldHeadTransform = headTransform;
         objectRidigbody = gameObject.GetComponent<Rigidbody>();
+        float distanceX = player.position.x - gameObject.transform.position.x;
+        float distanceY = player.position.y - gameObject.transform.position.y;
+        distanceCameraPlayer = Mathf.Sqrt(distanceX * distanceX + distanceY * distanceY);
     }
 
     private void FixedUpdate()
     {
-        if (!isFollowing) Debug.Log($"not following anymore!");
+        if (!isFollowing)
+        {
+            
+            // ja det är samma namn men det är inte samma scope.
+            float distanceX = player.position.x - gameObject.transform.position.x;
+            float distanceY = player.position.y - gameObject.transform.position.y;
+            Debug.Log($"currentDistance: {Mathf.Sqrt(distanceX * distanceX + distanceY * distanceY)}");
+            // ge lite extra distance
+            if (Mathf.Sqrt(distanceX * distanceX + distanceY * distanceY) > distanceCameraPlayer + 1/50f)
+            {
+                headTransform.SetParent(player);
+                isFollowing = true;
+            }
+        }
     }
 
     private void OnTriggerEnter(Collider other)
     {
-        gameObject.transform.SetParent(null);
-        if (!other.gameObject.GetComponentInParent<MouseLookController>() && canBeTriggered)
-        {
-            Debug.Log($"trigger entered!");
-            canBeTriggered = false;
-            customEvents.PublishOnFollowChange(false);
-        }
-    }
-
-    private void ChangeIsFollowing(bool value)
-    {
-        isFollowing = value;
+        oldCameraPosition = gameObject.transform.localPosition;
+        oldCameraRotation = gameObject.transform.localRotation;
+        Debug.Log($"oldHeadTransform: {oldHeadTransform.localPosition}");
+        headTransform.SetParent(null);
+        isFollowing = false;
     }
 
     private void OnTriggerExit(Collider other)
     {
-        canBeTriggered = true;
+        headTransform = oldHeadTransform;
+        // testar lite nya saker!
+        SetLocalCameraPosition(oldCameraRotation, gameObject.GetComponent<Camera>());
+    }
+
+    private static void SetLocalCameraPosition(Quaternion rotation, Camera camera)
+    {
+        Debug.Log($"set local camera position!");
+        camera.gameObject.transform.localRotation = rotation;
     }
 }
