@@ -14,9 +14,17 @@ public class onCameraCollide : MonoBehaviour
     private Transform oldHeadTransform;
     private Vector3 oldCameraPosition;
     private Quaternion oldCameraRotation;
+    private Ray cameraRay;
     
     private void Awake()
     {
+        Vector3 CameraPosition = gameObject.transform.position;
+        Vector3 PlayerPosition = player.position;
+        cameraRay = new Ray(gameObject.transform.position, new Vector3(
+            CameraPosition.x + PlayerPosition.x,
+            CameraPosition.y + PlayerPosition.y,
+            CameraPosition.z + PlayerPosition.z).normalized
+        );
         oldHeadTransform = headTransform;
         objectRidigbody = gameObject.GetComponent<Rigidbody>();
         float distanceX = player.position.x - gameObject.transform.position.x;
@@ -26,6 +34,11 @@ public class onCameraCollide : MonoBehaviour
 
     private void FixedUpdate()
     {
+        Debug.DrawLine(cameraRay.origin, cameraRay.origin + cameraRay.direction * 2f, Color.red);
+        if (Physics.Raycast(cameraRay, out RaycastHit hit))
+        {
+            Debug.Log(hit.transform.name);
+        }
         if (!isFollowing)
         {
             
@@ -42,8 +55,20 @@ public class onCameraCollide : MonoBehaviour
         }
     }
 
+    private void Update()
+    {
+        Vector3 CameraPosition = gameObject.transform.position;
+        Vector3 PlayerPosition = player.position;
+        cameraRay.origin = gameObject.transform.position;
+        cameraRay.direction = new Vector3(
+                CameraPosition.x + PlayerPosition.x,
+                CameraPosition.y + PlayerPosition.y,
+                CameraPosition.z + PlayerPosition.z).normalized;
+    }
+
     private void OnTriggerEnter(Collider other)
     {
+
         oldCameraPosition = gameObject.transform.localPosition;
         oldCameraRotation = gameObject.transform.localRotation;
         Debug.Log($"oldHeadTransform: {oldHeadTransform.localPosition}");
@@ -63,4 +88,5 @@ public class onCameraCollide : MonoBehaviour
         Debug.Log($"set local camera position!");
         camera.gameObject.transform.localRotation = rotation;
     }
+    
 }
