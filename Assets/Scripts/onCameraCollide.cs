@@ -11,7 +11,7 @@ public class onCameraCollide : MonoBehaviour
     private Rigidbody objectRidigbody; 
     private bool isFollowing = true;
     private float distanceCameraPlayer;
-    private Transform oldHeadTransform;
+    private Vector3 oldHeadTransformLocalPos;
     private Vector3 oldCameraPosition;
     private Quaternion oldCameraRotation;
     private Ray cameraRay;
@@ -25,7 +25,7 @@ public class onCameraCollide : MonoBehaviour
             CameraPosition.y + PlayerPosition.y,
             CameraPosition.z + PlayerPosition.z).normalized
         );
-        oldHeadTransform = headTransform;
+        oldHeadTransformLocalPos = headTransform.localPosition;
         objectRidigbody = gameObject.GetComponent<Rigidbody>();
         float distanceX = player.position.x - gameObject.transform.position.x;
         float distanceY = player.position.y - gameObject.transform.position.y;
@@ -68,17 +68,17 @@ public class onCameraCollide : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-
+        oldHeadTransformLocalPos = headTransform.localPosition;
         oldCameraPosition = gameObject.transform.localPosition;
         oldCameraRotation = gameObject.transform.localRotation;
-        Debug.Log($"oldHeadTransform: {oldHeadTransform.localPosition}");
+        Debug.Log($"oldHeadTransform: {oldHeadTransformLocalPos}");
         headTransform.SetParent(null);
         isFollowing = false;
     }
 
     private void OnTriggerExit(Collider other)
     {
-        headTransform = oldHeadTransform;
+        headTransform.localPosition = oldHeadTransformLocalPos;
         // testar lite nya saker!
         SetLocalCameraPosition(oldCameraRotation, gameObject.GetComponent<Camera>());
     }
