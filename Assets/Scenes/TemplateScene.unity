@@ -13240,6 +13240,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 568439061}
     m_Modifications:
+    - target: {fileID: 32146735045179525, guid: aef8c801229df804d917a347e7b68219, type: 3}
+      propertyPath: m_LocalScale.z
+      value: 0.0003463726
+      objectReference: {fileID: 0}
     - target: {fileID: 839558071492753306, guid: aef8c801229df804d917a347e7b68219, type: 3}
       propertyPath: m_LocalScale.z
       value: 0.0003463725
@@ -16911,7 +16915,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   player: {fileID: 1522075679}
-  customEvents: {fileID: 1498205439}
   headTransform: {fileID: 920157923}
 --- !u!135 &1498205442
 SphereCollider:
@@ -23554,6 +23557,10 @@ PrefabInstance:
     - target: {fileID: 3282390999878320910, guid: 897b9e252cb6df242aa10e6714ed22c4, type: 3}
       propertyPath: m_Name
       value: 3DCoffinLOD
+      objectReference: {fileID: 0}
+    - target: {fileID: 5812541129467243223, guid: 897b9e252cb6df242aa10e6714ed22c4, type: 3}
+      propertyPath: m_LocalScale.y
+      value: 0.01004016
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

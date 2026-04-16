@@ -12,6 +12,7 @@ public class onCameraCollide : MonoBehaviour
     private bool isFollowing = true;
     private float distanceCameraPlayer;
     private Vector3 oldHeadTransformLocalPos;
+    private Quaternion oldHeadTransformRotation;
     private Vector3 oldCameraPosition;
     private Quaternion oldCameraRotation;
     private Ray cameraRay;
@@ -29,7 +30,8 @@ public class onCameraCollide : MonoBehaviour
         objectRidigbody = gameObject.GetComponent<Rigidbody>();
         float distanceX = player.position.x - gameObject.transform.position.x;
         float distanceY = player.position.y - gameObject.transform.position.y;
-        distanceCameraPlayer = Mathf.Sqrt(distanceX * distanceX + distanceY * distanceY);
+        float distanceZ = player.position.z - gameObject.transform.position.z;
+        distanceCameraPlayer = Mathf.Sqrt(distanceX * distanceX + distanceY * distanceY + distanceZ * distanceZ);
     }
 
     private void FixedUpdate()
@@ -37,7 +39,7 @@ public class onCameraCollide : MonoBehaviour
         Debug.DrawLine(cameraRay.origin, cameraRay.origin + cameraRay.direction * 2f, Color.red);
         if (Physics.Raycast(cameraRay, out RaycastHit hit))
         {
-            Debug.Log(hit.transform.name);
+            // Debug.Log(hit.transform.name);
         }
         if (!isFollowing)
         {
@@ -45,9 +47,10 @@ public class onCameraCollide : MonoBehaviour
             // ja det är samma namn men det är inte samma scope.
             float distanceX = player.position.x - gameObject.transform.position.x;
             float distanceY = player.position.y - gameObject.transform.position.y;
-            Debug.Log($"currentDistance: {Mathf.Sqrt(distanceX * distanceX + distanceY * distanceY)}");
+            float distanceZ = player.position.z - gameObject.transform.position.z;
+            // Debug.Log($"currentDistance: {Mathf.Sqrt(distanceX * distanceX + distanceY * distanceY)}");
             // ge lite extra distance
-            if (Mathf.Sqrt(distanceX * distanceX + distanceY * distanceY) > distanceCameraPlayer + 1/50f)
+            if (Mathf.Sqrt(distanceX * distanceX + distanceY * distanceY + distanceZ * distanceZ) > distanceCameraPlayer + 1/50f)
             {
                 headTransform.SetParent(player);
                 isFollowing = true;
@@ -69,6 +72,7 @@ public class onCameraCollide : MonoBehaviour
     private void OnTriggerEnter(Collider other)
     {
         oldHeadTransformLocalPos = headTransform.localPosition;
+        oldHeadTransformRotation = headTransform.localRotation;
         oldCameraPosition = gameObject.transform.localPosition;
         oldCameraRotation = gameObject.transform.localRotation;
         Debug.Log($"oldHeadTransform: {oldHeadTransformLocalPos}");
@@ -78,15 +82,24 @@ public class onCameraCollide : MonoBehaviour
 
     private void OnTriggerExit(Collider other)
     {
-        headTransform.localPosition = oldHeadTransformLocalPos;
+        headTransform.SetParent(player.transform, false);
         // testar lite nya saker!
-        SetLocalCameraPosition(oldCameraRotation, gameObject.GetComponent<Camera>());
+        //SetLocalCameraPosition(oldCameraRotation, oldCameraPosition, gameObject.GetComponent<Camera>());
+        SetLocalHeadRotation(oldHeadTransformRotation, oldHeadTransformLocalPos, headTransform);
     }
 
-    private static void SetLocalCameraPosition(Quaternion rotation, Camera camera)
+    private static void SetLocalCameraPosition(Quaternion rotation,Vector3 oldLocalPosition, Camera camera)
     {
-        Debug.Log($"set local camera position!");
         camera.gameObject.transform.localRotation = rotation;
+        camera.gameObject.transform.localPosition = oldLocalPosition;
+    }
+
+    private static void SetLocalHeadRotation(Quaternion rotation, Vector3 localPosition, Transform head)
+    {
+        Debug.Log($"localRotation: {rotation}, localPosition: {localPosition}");
+        head.localRotation = rotation;
+        head.localPosition = localPosition;
+        Debug.Log($"new values LocalRotation: {head.localRotation}, localPosition: {head.localPosition}");
     }
     
 }
