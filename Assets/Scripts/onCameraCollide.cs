@@ -8,26 +8,19 @@ public class onCameraCollide : MonoBehaviour
 {
     [SerializeField] private Transform player;
     [SerializeField] private Transform headTransform;
-    private Rigidbody objectRidigbody; 
     private bool isFollowing = true;
+    private bool canBeTriggered = true;
     private float distanceCameraPlayer;
     private Vector3 oldHeadTransformLocalPos;
     private Quaternion oldHeadTransformRotation;
     private Vector3 oldCameraPosition;
     private Quaternion oldCameraRotation;
-    private Ray cameraRay;
     
     private void Awake()
     {
         Vector3 CameraPosition = gameObject.transform.position;
         Vector3 PlayerPosition = player.position;
-        cameraRay = new Ray(gameObject.transform.position, new Vector3(
-            CameraPosition.x + PlayerPosition.x,
-            CameraPosition.y + PlayerPosition.y,
-            CameraPosition.z + PlayerPosition.z).normalized
-        );
         oldHeadTransformLocalPos = headTransform.localPosition;
-        objectRidigbody = gameObject.GetComponent<Rigidbody>();
         float distanceX = player.position.x - gameObject.transform.position.x;
         float distanceY = player.position.y - gameObject.transform.position.y;
         float distanceZ = player.position.z - gameObject.transform.position.z;
@@ -36,11 +29,6 @@ public class onCameraCollide : MonoBehaviour
 
     private void FixedUpdate()
     {
-        Debug.DrawLine(cameraRay.origin, cameraRay.origin + cameraRay.direction * 2f, Color.red);
-        if (Physics.Raycast(cameraRay, out RaycastHit hit))
-        {
-            // Debug.Log(hit.transform.name);
-        }
         if (!isFollowing)
         {
             
@@ -52,9 +40,11 @@ public class onCameraCollide : MonoBehaviour
             // ge lite extra distance
             if (Mathf.Sqrt(distanceX * distanceX + distanceY * distanceY + distanceZ * distanceZ) > distanceCameraPlayer + 1/50f)
             {
+                // TODO detta är problematiskt när spelare hoppar upp och ned framför en väg
                 headTransform.SetParent(player);
                 isFollowing = true;
             }
+            
         }
     }
 
@@ -62,30 +52,31 @@ public class onCameraCollide : MonoBehaviour
     {
         Vector3 CameraPosition = gameObject.transform.position;
         Vector3 PlayerPosition = player.position;
-        cameraRay.origin = gameObject.transform.position;
-        cameraRay.direction = new Vector3(
-                CameraPosition.x + PlayerPosition.x,
-                CameraPosition.y + PlayerPosition.y,
-                CameraPosition.z + PlayerPosition.z).normalized;
     }
 
     private void OnTriggerEnter(Collider other)
     {
-        oldHeadTransformLocalPos = headTransform.localPosition;
-        oldHeadTransformRotation = headTransform.localRotation;
-        oldCameraPosition = gameObject.transform.localPosition;
-        oldCameraRotation = gameObject.transform.localRotation;
-        Debug.Log($"oldHeadTransform: {oldHeadTransformLocalPos}");
-        headTransform.SetParent(null);
-        isFollowing = false;
+        if (canBeTriggered)
+        {
+            Debug.Log($"trigger entered!");
+            oldHeadTransformLocalPos = headTransform.localPosition;
+            oldHeadTransformRotation = headTransform.localRotation;
+            oldCameraPosition = gameObject.transform.localPosition;
+            oldCameraRotation = gameObject.transform.localRotation;
+            headTransform.SetParent(null);
+            isFollowing = false;
+            canBeTriggered = false;
+        }
     }
 
     private void OnTriggerExit(Collider other)
     {
+        Debug.Log($"distance between player and camera: {distanceCameraPlayer}");
         headTransform.SetParent(player.transform, false);
         // testar lite nya saker!
         //SetLocalCameraPosition(oldCameraRotation, oldCameraPosition, gameObject.GetComponent<Camera>());
         SetLocalHeadRotation(oldHeadTransformRotation, oldHeadTransformLocalPos, headTransform);
+        canBeTriggered = true;
     }
 
     private static void SetLocalCameraPosition(Quaternion rotation,Vector3 oldLocalPosition, Camera camera)
