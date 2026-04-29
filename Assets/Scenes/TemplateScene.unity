@@ -10296,8 +10296,7 @@ Transform:
   m_LocalPosition: {x: 0.628, y: 0.582, z: -0.188}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children:
-  - {fileID: 1498205427}
+  m_Children: []
   m_Father: {fileID: 1522075679}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &921446518
@@ -16590,12 +16589,12 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1498205426}
   serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0.68499994, z: -0.8789997}
+  m_LocalRotation: {x: -0, y: -0.7071068, z: -0, w: 0.7071068}
+  m_LocalPosition: {x: 20.178999, y: 2.277, z: 3.5200002}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 920157923}
+  m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!81 &1498205429
 AudioListener:
@@ -17533,11 +17532,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 80ff35a28b9dfb8a9850824497134433, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  head: {fileID: 920157923}
-  body: {fileID: 1522075679}
+  objectToFollow: {fileID: 0}
   mouseSpeed: 1
   verticalAngle: 160
   customEvents: {fileID: 1498205439}
+  defaultLookingDirection: {x: 1, y: 1}
 --- !u!114 &1522075681
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -24508,6 +24507,7 @@ SceneRoots:
   m_ObjectHideFlags: 0
   m_Roots:
   - {fileID: 948324882}
+  - {fileID: 1498205427}
   - {fileID: 1522075679}
   - {fileID: 919758297}
   - {fileID: 2124822011}
