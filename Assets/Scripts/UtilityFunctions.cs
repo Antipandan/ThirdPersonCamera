@@ -158,5 +158,32 @@ namespace DefaultNamespace
                 sinusValue * unitVector.y, 
                 sinusValue * unitVector.z);
         }
+
+        public static quaternion ConjugateOfQuaternion(quaternion quat)
+        {
+            return new quaternion(quat.value.x * -1,  quat.value.y * -1, quat.value.z * -1, quat.value.w);
+        }
+
+        public static float GetMagnitudeOfQuaternion(quaternion quat)
+        {
+            return Mathf.Sqrt(
+                quat.value.x * quat.value.x + quat.value.y * quat.value.y +
+                quat.value.z * quat.value.z + quat.value.w * quat.value.w);
+        }
+
+        public static quaternion InverseQuaternion(quaternion quat)
+        {
+            quaternion conjugate = ConjugateOfQuaternion(quat);
+            float magnitude = GetMagnitudeOfQuaternion(conjugate);
+            return new quaternion(
+                conjugate.value.x / magnitude, conjugate.value.y / magnitude,
+                conjugate.value.z / magnitude, conjugate.value.w / magnitude);
+        }
+
+        public static void RotateAboutQuaternion(Transform position, ref quaternion quat)
+        {
+            Vector3 newPosition;
+            quaternion rotatedQuaternion = 
+        }
     }
 }
