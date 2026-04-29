@@ -29,6 +29,42 @@ namespace DefaultNamespace
         {
             Console.WriteLine($"Size of {typeof(T)} is {sizeof(T)} bytes");
         }
+
+        /// <summary>
+        /// Get the dot product of two Vector2 instances
+        /// </summary>
+        /// <param name="v1">First Vector2</param>
+        /// <param name="v2">Second Vector2</param>
+        /// <returns></returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static float DotProduct(Vector2 v1, Vector2 v2)
+        {
+            return v1.x * v2.x + v1.y * v2.y;     
+        }
+        
+        /// <summary>
+        /// Get the dot product of two Vector3 instances
+        /// </summary>
+        /// <param name="v1">First Vector3</param>
+        /// <param name="v2">Second Vector3</param>
+        /// <returns></returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static float DotProduct(Vector3 v1, Vector3 v2)
+        {
+            return v1.x * v2.x + v1.y * v2.y + v1.z * v2.z;    
+        }
+
+        /// <summary>
+        /// Get the cross product of 2 Vector3 instances
+        /// </summary>
+        /// <param name="v1">First Vector3</param>
+        /// <param name="v2">Second Vector3</param>
+        /// <returns></returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Vector3 CrossProduct(Vector3 v1, Vector3 v2)
+        {
+            return new Vector3(v1.y*v2.z - v2.y*v1.z, v1.z*v2.x - v2.z*v1.x, v1.x*v2.y - v2.x*v1.y);
+        }
         
         /// <summary>
         /// Modifies a quaternion struct with new x, y, z and w values. Takes a reference to an existing quaternion
@@ -180,10 +216,30 @@ namespace DefaultNamespace
                 conjugate.value.z / magnitude, conjugate.value.w / magnitude);
         }
 
+        
         public static void RotateAboutQuaternion(Transform position, ref quaternion quat)
         {
             Vector3 newPosition;
-            quaternion rotatedQuaternion = 
+            quaternion inverseQuaternion = InverseQuaternion(quat);
+            // see equation 8.7 in https://gamemath.com/book/orient.html for futher details
+            Vector3 oldRotationVector = new Vector3(
+                quat.value.x,
+                quat.value.y,
+                quat.value.z);
+            
+            Vector3 inverseRotationVector = new Vector3(
+                inverseQuaternion.value.x,
+                inverseQuaternion.value.y,
+                inverseQuaternion.value.z);
+            
+            Vector3 newRotationVector = 
+                quat.value.w * inverseRotationVector +
+                inverseQuaternion.value.w * oldRotationVector +
+                CrossProduct(oldRotationVector, inverseRotationVector);
+            
+            
+            
+            
         }
     }
 }
