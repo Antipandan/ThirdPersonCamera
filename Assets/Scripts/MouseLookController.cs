@@ -1,6 +1,7 @@
 using System;
 using System.Runtime.CompilerServices;
 using DefaultNamespace;
+using Unity.Mathematics;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.TextCore.Text;
@@ -20,11 +21,13 @@ public class MouseLookController : MonoBehaviour, IPauseable
     [SerializeField] 
     private CustomEvents customEvents;
 
-    [SerializeField] 
-    private static readonly Vector2 defaultLookingDirection = new Vector2(1f, 1f);
-
+    [SerializeField]
+    private Vector2 defaultLookingDirection = new Vector2(1f, 1f);
+    
+    private float rotationAngle;
     private Vector2 currentLookingDirection;
     private InputAction lookAction;
+    private quaternion rotationQuaternion;
     private bool isPaused;
     
     
@@ -32,6 +35,7 @@ public class MouseLookController : MonoBehaviour, IPauseable
     
     private void Awake()
     {
+        rotationQuaternion = new quaternion(0f, 0f, 0f, 0f);
         lookAction = InputSystem.actions.FindAction("Look");
     }
 
@@ -55,8 +59,9 @@ public class MouseLookController : MonoBehaviour, IPauseable
         float hor = look.x;
         float ver = look.y;
         UtilityFunctions.ModifyVector2(hor, ver, ref currentLookingDirection);
-        Debug.Log($"current looking direction is:  {currentLookingDirection}");
-
+        rotationAngle = UtilityFunctions.GetMagnitudeOfVector(currentLookingDirection);
+        //Debug.Log($"current looking direction is: {currentLookingDirection}");
+        
         if (Mathf.Abs(hor) > float.Epsilon) 
         {
         }

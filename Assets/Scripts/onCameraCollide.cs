@@ -16,13 +16,11 @@ public class onCameraCollide : MonoBehaviour
     
     private void Awake()
     {
-        Vector3 CameraPosition = gameObject.transform.position;
-        Vector3 PlayerPosition = player.position;
         oldHeadTransformLocalPos = headTransform.localPosition;
         float distanceX = player.position.x - gameObject.transform.position.x;
         float distanceY = player.position.y - gameObject.transform.position.y;
         float distanceZ = player.position.z - gameObject.transform.position.z;
-        distanceCameraPlayer = Mathf.Sqrt(distanceX * distanceX + distanceY * distanceY + distanceZ * distanceZ);
+        distanceCameraPlayer = UtilityFunctions.GetMagnitudeOfVector(new Vector3(distanceX, distanceY, distanceZ));
     }
 
     private void FixedUpdate()
@@ -34,7 +32,7 @@ public class onCameraCollide : MonoBehaviour
             float distanceX = player.position.x - gameObject.transform.position.x;
             float distanceY = player.position.y - gameObject.transform.position.y;
             float distanceZ = player.position.z - gameObject.transform.position.z;
-            if (Mathf.Sqrt(distanceX * distanceX + distanceY * distanceY + distanceZ * distanceZ) > distanceCameraPlayer + 1/50f)
+            if (UtilityFunctions.GetMagnitudeOfVector(new Vector3(distanceX, distanceY, distanceZ)) > distanceCameraPlayer + 1/50f)
             {
                 headTransform.SetParent(player);
                 isFollowing = true;

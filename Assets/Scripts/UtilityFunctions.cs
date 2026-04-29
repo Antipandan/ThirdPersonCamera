@@ -34,6 +34,45 @@ namespace DefaultNamespace
             vector.x = x;
             vector.y = y;
         }
+
+        public static float GetMagnitudeOfVector(Vector2 vector)
+        {
+            if (vector == Vector2.zero) return 0f;
+            return Mathf.Sqrt(vector.x * vector.x + vector.y * vector.y);
+        }
+        
+        public static float GetMagnitudeOfVector(Vector3 vector)
+        {
+            if (vector == Vector3.zero) return 0f;
+            return Mathf.Sqrt(vector.x * vector.x + vector.y * vector.y);
+        }
+
+        public static void NormalizeVector(ref Vector2 vector)
+        {
+            float magnitude = GetMagnitudeOfVector(vector);
+            vector.x /= magnitude;
+            vector.y /= magnitude;
+        }
+
+        public static void NormalizeVector(ref Vector3 vector)
+        {
+            float magnitude = GetMagnitudeOfVector(vector);
+            vector.x /= magnitude;
+            vector.y /= magnitude;
+            vector.z /= magnitude;
+        }
+
+        public static Vector2 NormalizeVector(Vector2 vector)
+        {
+            float magnitude = GetMagnitudeOfVector(vector);
+            return new Vector2(vector.x / magnitude, vector.y / magnitude);
+        }
+
+        public static Vector3 NormalizeVector(Vector3 vector)
+        {
+            float magnitude = GetMagnitudeOfVector(vector);
+            return new Vector3(vector.x /  magnitude, vector.y / magnitude, vector.z / magnitude);
+        }
         
     }
 }
