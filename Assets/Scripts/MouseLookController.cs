@@ -55,20 +55,17 @@ public class MouseLookController : MonoBehaviour, IPauseable
 
     private void MouseLook()
     {
-        Vector2 look = lookAction.ReadValue<Vector2>() * 0.1f;
+        Vector2 look = lookAction.ReadValue<Vector2>();
+        // Debug.Log($"looking direction: {look}");
+        if (look == Vector2.zero) look = Vector2.zero;
         float hor = look.x;
         float ver = look.y;
+        //Debug.Log($"hor: {hor}, ver: {ver}");
         UtilityFunctions.ModifyVector2(hor, ver, ref currentLookingDirection);
         rotationAngle = UtilityFunctions.GetMagnitudeOfVector(currentLookingDirection);
-        //Debug.Log($"current looking direction is: {currentLookingDirection}");
+        currentLookingDirection = UtilityFunctions.NormalizeVector(currentLookingDirection);
+        Debug.Log($"current looking direction: {currentLookingDirection}");
         
-        if (Mathf.Abs(hor) > float.Epsilon) 
-        {
-        }
-
-        if (Mathf.Abs(ver) > float.Epsilon) 
-        {
-        }
     }
     
 }

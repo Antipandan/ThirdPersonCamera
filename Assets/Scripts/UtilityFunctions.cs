@@ -94,6 +94,7 @@ namespace DefaultNamespace
         /// <param name="vector">Vector2 instance to be modified</param>
         public static void ModifyVector2(float x, float y, ref Vector2 vector)
         {
+            // Debug.Log($"function: {nameof(ModifyVector2)}, new values: ({x}, {y})");
             vector.x = x;
             vector.y = y;
         }
@@ -106,6 +107,7 @@ namespace DefaultNamespace
         /// <returns>returns the magnitude</returns>
         public static float GetMagnitudeOfVector(Vector2 vector)
         {
+            Debug.Log( $"function name: {nameof(GetMagnitudeOfVector)} magnitude: {Mathf.Sqrt(vector.x * vector.x + vector.y * vector.y)}");
             if (vector == Vector2.zero) return 0f;
             return Mathf.Sqrt(vector.x * vector.x + vector.y * vector.y);
         }
@@ -155,7 +157,9 @@ namespace DefaultNamespace
         /// <returns>Returns a normalized Vector2</returns>
         public static Vector2 NormalizeVector(Vector2 vector)
         {
+            Debug.Log($"function: {nameof(NormalizeVector)}, new values: ({vector.x}, {vector.y})");
             float magnitude = GetMagnitudeOfVector(vector);
+            if (magnitude == 0) return Vector2.zero;
             return new Vector2(vector.x / magnitude, vector.y / magnitude);
         }
 
@@ -181,11 +185,11 @@ namespace DefaultNamespace
         public static void ConvertMouseVectorToQuaternionValue(float angle, Vector3 unitVector, ref quaternion quat)
         {
             
-            float sinusValue = Mathf.Sin(angle * Mathf.Deg2Rad);
+            float sinusValue = Mathf.Sin(angle /2f * Mathf.Deg2Rad);
             quat.value.x = sinusValue * unitVector.x;
             quat.value.y = sinusValue * unitVector.y;
             quat.value.z = sinusValue * unitVector.z;
-            quat.value.w = Mathf.Cos(angle * Mathf.Deg2Rad);
+            quat.value.w = Mathf.Cos(angle / 2f * Mathf.Deg2Rad);
         }
         /// <summary>
         /// Calculates a quaternion which is responsible for rotation an object about the Y and Z axis
@@ -196,9 +200,9 @@ namespace DefaultNamespace
         /// <returns>returns a new quaternion</returns>>
         public static Quaternion ConvertMouseVectorToQuaternionValue(float angle, Vector3 unitVector)
         {
-            float sinusValue = Mathf.Sin(angle * Mathf.Deg2Rad);
+            float sinusValue = Mathf.Sin(angle / 2f * Mathf.Deg2Rad);
             return new Quaternion(
-                Mathf.Cos(angle * Mathf.Deg2Rad), 
+                Mathf.Cos(angle / 2f * Mathf.Deg2Rad), 
                 sinusValue * unitVector.x, 
                 sinusValue * unitVector.y, 
                 sinusValue * unitVector.z);
@@ -245,28 +249,31 @@ namespace DefaultNamespace
         /// Rotate a position around a quaternion. Modifies the given position but doesn't rotate said object.
         /// see equation 8.7 in https://gamemath.com/book/orient.html#quaternion_cross_product for further details 
         /// </summary>
-        /// <param name="position"></param>
-        /// <param name="quat"></param>
-        public static void RotateAboutQuaternion(Transform position, ref quaternion quat)
+        /// <param name="position">The position of a given object taken as a transform</param>
+        /// <param name="quat">quaternion to base the new positioning of the transform gameobject</param>
+        public static void RotateAboutQuaternion(Transform position, quaternion quat)
         {
-            Vector3 newPosition;
             quaternion inverseQuaternion = InverseQuaternion(quat);
-            // 
+            // Vektor som tillhör q1 / Q
             Vector3 oldRotationVector = new Vector3(
                 quat.value.x,
                 quat.value.y,
                 quat.value.z);
-            
+            // vektor som tillhör q2 / q^-1
             Vector3 inverseRotationVector = new Vector3(
                 inverseQuaternion.value.x,
                 inverseQuaternion.value.y,
                 inverseQuaternion.value.z);
             
+            // ekvation nedan
+            // V'
             Vector3 newRotationVector = 
                 quat.value.w * inverseRotationVector +
                 inverseQuaternion.value.w * oldRotationVector +
                 CrossProduct(oldRotationVector, inverseRotationVector);
-            
+            // W'. vi behöver inte W' för våra syften men har den här ifall att man behöver den i framtiden.
+            // float coefficient = quat.value.w * inverseQuaternion.value.w - DotProduct(oldRotationVector, inverseRotationVector);
+            position.position = newRotationVector;
         }
     }
 }
