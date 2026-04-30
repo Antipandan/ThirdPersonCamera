@@ -184,7 +184,6 @@ namespace DefaultNamespace
         /// <param name="quat">quaternion to be modified</param>
         public static void ConvertMouseVectorToQuaternionValue(float angle, Vector3 unitVector, ref quaternion quat)
         {
-            
             float sinusValue = Mathf.Sin(angle /2f * Mathf.Deg2Rad);
             quat.value.x = sinusValue * unitVector.x;
             quat.value.y = sinusValue * unitVector.y;
