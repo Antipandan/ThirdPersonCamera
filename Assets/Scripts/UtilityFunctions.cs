@@ -31,7 +31,8 @@ namespace DefaultNamespace
         }
 
         /// <summary>
-        /// Get the dot product of two Vector2 instances
+        /// Get the dot product of two Vector2 instances.
+        /// see https://gamemath.com/book/vectors.html#cross_product#dot_product for equation
         /// </summary>
         /// <param name="v1">First Vector2</param>
         /// <param name="v2">Second Vector2</param>
@@ -44,6 +45,7 @@ namespace DefaultNamespace
         
         /// <summary>
         /// Get the dot product of two Vector3 instances
+        /// see https://gamemath.com/book/vectors.html#cross_product#dot_product for equation
         /// </summary>
         /// <param name="v1">First Vector3</param>
         /// <param name="v2">Second Vector3</param>
@@ -56,6 +58,7 @@ namespace DefaultNamespace
 
         /// <summary>
         /// Get the cross product of 2 Vector3 instances
+        /// see https://gamemath.com/book/vectors.html#cross_product#cross_product for equation
         /// </summary>
         /// <param name="v1">First Vector3</param>
         /// <param name="v2">Second Vector3</param>
@@ -96,7 +99,8 @@ namespace DefaultNamespace
         }
         
         /// <summary>
-        /// Returns the magnitude of a Vector2. Magnitude can substitute lenght of a vector if measured from origin
+        /// Returns the magnitude of a Vector2. Magnitude can substitute lenght of a vector if measured from origin.
+        /// see https://gamemath.com/book/vectors.html#vector_magnitude for details
         /// </summary>
         /// <param name="vector">Vector2 instance to get the magnitude of</param>
         /// <returns>returns the magnitude</returns>
@@ -107,7 +111,8 @@ namespace DefaultNamespace
         }
         
         /// <summary>
-        /// Returns the magnitude of a Vector3. Magnitude can substitute lenght of a vector if measured from origin
+        /// Returns the magnitude of a Vector3. Magnitude can substitute lenght of a vector if measured from origin.
+        /// see https://gamemath.com/book/vectors.html#vector_magnitude for details
         /// </summary>
         /// <param name="vector">Vector3 instance to get the magnitude of</param>
         /// <returns>returns the magnitude</returns>
@@ -119,6 +124,7 @@ namespace DefaultNamespace
 
         /// <summary>
         /// Calculates a normalized Vector2 of a given Vector2. Takes a reference to an existing Vector2
+        /// see https://gamemath.com/book/vectors.html#normalized_vectors for details
         /// </summary>
         /// <param name="vector">Vector2 instance to turn into a normalized Vector2</param>
         public static void NormalizeVector(ref Vector2 vector)
@@ -130,6 +136,7 @@ namespace DefaultNamespace
 
         /// <summary>
         /// Calculates a normalized Vector3 of a given Vector3. Takes a reference to an existing Vector3
+        /// see https://gamemath.com/book/vectors.html#normalized_vectors for details
         /// </summary>
         /// <param name="vector">Vector3 instance to turn into a normalized Vector2</param>
         public static void NormalizeVector(ref Vector3 vector)
@@ -142,6 +149,7 @@ namespace DefaultNamespace
         
         /// <summary>
         /// Calculates a normalized Vector2 of a given Vector2.
+        /// see https://gamemath.com/book/vectors.html#normalized_vectors for details
         /// </summary>
         /// <param name="vector">Vector2 instance to turn into a normalized Vector2</param>
         /// <returns>Returns a normalized Vector2</returns>
@@ -153,6 +161,7 @@ namespace DefaultNamespace
 
         /// <summary>
         /// Calculates a normalized Vector3 of a given Vector3.
+        /// see https://gamemath.com/book/vectors.html#normalized_vectors for details
         /// </summary>
         /// <param name="vector">Vector3 instance to turn into a normalized Vector3</param>
         /// <returns>Returns a normalized Vector3</returns>
@@ -194,19 +203,35 @@ namespace DefaultNamespace
                 sinusValue * unitVector.y, 
                 sinusValue * unitVector.z);
         }
-
+        /// <summary>
+        /// Calculate the Conjugate of a given quaternion. Returns a new conjugate quaternion.
+        /// See https://gamemath.com/book/orient.html#quaternion_conjugate equation 8.6
+        /// </summary>
+        /// <param name="quat">quaternion to use to get conjugate</param>
+        /// <returns>Conjugate quaternion</returns>
         public static quaternion ConjugateOfQuaternion(quaternion quat)
         {
             return new quaternion(quat.value.x * -1,  quat.value.y * -1, quat.value.z * -1, quat.value.w);
         }
 
+        /// <summary>
+        /// Calculate the Magnitude of a quaternion. see https://gamemath.com/book/orient.html#quaternion_magnitude
+        /// equation 8.4
+        /// </summary>
+        /// <param name="quat">quaternion to get the magnitude from</param>
+        /// <returns>magnitude of quaternion</returns>
         public static float GetMagnitudeOfQuaternion(quaternion quat)
         {
             return Mathf.Sqrt(
                 quat.value.x * quat.value.x + quat.value.y * quat.value.y +
                 quat.value.z * quat.value.z + quat.value.w * quat.value.w);
         }
-
+        /// <summary>
+        /// Calculate the inverse of a given quaternion. returns a new quaternion.
+        /// see https://gamemath.com/book/orient.html#quaternion_conjugate equation 8.6 for details
+        /// </summary>
+        /// <param name="quat"></param>
+        /// <returns></returns>
         public static quaternion InverseQuaternion(quaternion quat)
         {
             quaternion conjugate = ConjugateOfQuaternion(quat);
@@ -215,13 +240,18 @@ namespace DefaultNamespace
                 conjugate.value.x / magnitude, conjugate.value.y / magnitude,
                 conjugate.value.z / magnitude, conjugate.value.w / magnitude);
         }
-
         
+        /// <summary>
+        /// Rotate a position around a quaternion. Modifies the given position but doesn't rotate said object.
+        /// see equation 8.7 in https://gamemath.com/book/orient.html#quaternion_cross_product for further details 
+        /// </summary>
+        /// <param name="position"></param>
+        /// <param name="quat"></param>
         public static void RotateAboutQuaternion(Transform position, ref quaternion quat)
         {
             Vector3 newPosition;
             quaternion inverseQuaternion = InverseQuaternion(quat);
-            // see equation 8.7 in https://gamemath.com/book/orient.html for futher details
+            // 
             Vector3 oldRotationVector = new Vector3(
                 quat.value.x,
                 quat.value.y,
@@ -236,9 +266,6 @@ namespace DefaultNamespace
                 quat.value.w * inverseRotationVector +
                 inverseQuaternion.value.w * oldRotationVector +
                 CrossProduct(oldRotationVector, inverseRotationVector);
-            
-            
-            
             
         }
     }
