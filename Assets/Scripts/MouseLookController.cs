@@ -53,26 +53,19 @@ public class MouseLookController : MonoBehaviour, IPauseable
     {
         Vector2 look = lookAction.ReadValue<Vector2>();
         if (look == Vector2.zero) look = Vector2.zero;
-        float hor = look.x;
-        float ver = look.y;
+        float hor = (look.x) * Time.deltaTime;
+        float ver = (look.y) * Time.deltaTime;
         
         UtilityFunctions.ModifyVector2(hor, ver, ref currentLookingDirection);
         rotationAngle = UtilityFunctions.GetMagnitudeOfVector(currentLookingDirection);
         currentLookingDirection = UtilityFunctions.NormalizeVector(currentLookingDirection);
-        Vector3 mouseLookingDirection = new Vector3(0f, currentLookingDirection.x, currentLookingDirection.y);
-        UtilityFunctions.ConvertMouseVectorToQuaternionValue(1f, mouseLookingDirection, ref rotationQuaternion);
-        //quaternion deltaQuaternion = new quaternion(deltaPosition.x, deltaPosition.y, deltaPosition.z, 0f);
-        RotateAroundQuaternion();
-    }
-
-    private void RotateAroundQuaternion()
-    {
-        Vector3 deltaPosition = gameObject.transform.position - objectToRotateAround.position;
-        quaternion positionQuaternion = new quaternion(deltaPosition.x, deltaPosition.y, deltaPosition.z, 0f);
-        quaternion rotatedQuaternion = UtilityFunctions.MultiplyQuaternion(
-            UtilityFunctions.MultiplyQuaternion(rotationQuaternion, positionQuaternion),
-            UtilityFunctions.InverseQuaternion(rotationQuaternion));
+        Vector3 mouseLookingDirection = new Vector3(0f, currentLookingDirection.y, currentLookingDirection.x);
+        Debug.Log($"mouselooking direction: {mouseLookingDirection}");
+        UtilityFunctions.ConvertMouseVectorToQuaternionValue(20f, mouseLookingDirection, ref rotationQuaternion);
+        Debug.Log($"rotationQuaternion: {rotationQuaternion}");
+        quaternion rotatedQuaternion = UtilityFunctions.RotateAroundQuaternion(rotationQuaternion, gameObject.transform.position - objectToRotateAround.position);
         gameObject.transform.position = new Vector3(rotatedQuaternion.value.x, rotatedQuaternion.value.y, rotatedQuaternion.value.z) + objectToRotateAround.position;
     }
+    
     
 }

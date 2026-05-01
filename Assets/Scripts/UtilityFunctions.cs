@@ -184,11 +184,11 @@ namespace Utility
         /// <param name="quat">quaternion to be modified</param>
         public static void ConvertMouseVectorToQuaternionValue(float angle, Vector3 unitVector, ref quaternion quat)
         {
-            float sinusValue = Mathf.Sin(angle /2f * Mathf.Deg2Rad);
+            float sinusValue = Mathf.Sin((angle /2f) * Mathf.Deg2Rad);
             quat.value.x = sinusValue * unitVector.x;
             quat.value.y = sinusValue * unitVector.y;
             quat.value.z = sinusValue * unitVector.z;
-            quat.value.w = Mathf.Cos(angle / 2f * Mathf.Deg2Rad);
+            quat.value.w = Mathf.Cos((angle / 2f) * Mathf.Deg2Rad);
         }
         /// <summary>
         /// Calculates a quaternion which is responsible for rotation an object about the Y and Z axis
@@ -201,10 +201,10 @@ namespace Utility
         {
             float sinusValue = Mathf.Sin(angle / 2f * Mathf.Deg2Rad);
             return new Quaternion(
-                Mathf.Cos(angle / 2f * Mathf.Deg2Rad), 
                 sinusValue * unitVector.x, 
                 sinusValue * unitVector.y, 
-                sinusValue * unitVector.z);
+                sinusValue * unitVector.z,
+                Mathf.Cos(angle / 2f * Mathf.Deg2Rad));
         }
         /// <summary>
         /// Calculate the Conjugate of a given quaternion. Returns a new conjugate quaternion.
@@ -245,7 +245,6 @@ namespace Utility
                 conjugate.value.x / magnitude, conjugate.value.y / magnitude,
                 conjugate.value.z / magnitude, conjugate.value.w / magnitude);
         }
-
         
         /// <summary>
         /// Multiply a quaternion with another. Takes two quaternions as input and returns the product of said quaternions
@@ -262,6 +261,44 @@ namespace Utility
             Vector3 newQuaternionVector = quaternion1Vector + quaternion2Vector + CrossProduct(quaternion1Vector, quaternion2Vector);
             float realNumber = quaternion1.value.w * quaternion2.value.w - DotProduct(quaternion1Vector, newQuaternionVector);
             return new quaternion(newQuaternionVector.x, newQuaternionVector.y, newQuaternionVector.z, realNumber);
+        }
+
+        /// <summary>
+        /// Rotates a position around a quaternion.
+        /// </summary>
+        /// <param name="quat"></param>
+        /// <param name="positionQuaternion"></param>
+        /// <returns>quaternion that represents new rotation</returns>
+        public static quaternion RotateAroundQuaternion(quaternion quat, quaternion positionQuaternion)
+        {
+            quaternion inverseQuaternion = InverseQuaternion(quat);
+            return MultiplyQuaternion(MultiplyQuaternion(quat,  positionQuaternion), inverseQuaternion);
+        }
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static bool CompareQuaternions(quaternion quat1, quaternion quat2)
+        {
+            // behöver denna funktion för att kolla för likhet mellan kvaternioner
+            // denna implemenation kanske inte är den bästa men det fungerar
+            float tolerance = 0.00001f;
+            return Math.Abs(quat1.value.w - quat2.value.w) < tolerance &
+                   Math.Abs(quat1.value.x - quat2.value.x) < tolerance &
+                   Math.Abs(quat1.value.y - quat2.value.y) < tolerance &
+                   Math.Abs(quat1.value.z - quat2.value.z) < tolerance;
+        }
+        
+        /// <summary>
+        /// Rotates a position around a quaternion.
+        /// </summary>
+        /// <param name="quat">Quaternion to rotate with</param>
+        /// <param name="position">position in Vector3 that should be rotated</param>
+        /// <returns>quaternion that represents new rotation</returns>
+        public static quaternion RotateAroundQuaternion(quaternion quat, Vector3 position)
+        {
+            quaternion positionQuaternion = new quaternion(position.x, position.y, position.z, 0f);
+            quaternion inverseQuaternion = InverseQuaternion(quat);
+            quaternion rotatedQuaternion = MultiplyQuaternion(MultiplyQuaternion(quat, positionQuaternion), inverseQuaternion);
+            Debug.Log($"rotatedQuaternion: {rotatedQuaternion}");
+            return rotatedQuaternion;
         }
         
     }

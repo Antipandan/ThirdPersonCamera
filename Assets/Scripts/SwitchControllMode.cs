@@ -38,10 +38,8 @@ namespace DefaultNamespace
         {
             // xor bitwise operation
             isPlaying ^= true;
-            if (lockCamereMovement)
-            {
-                if (mouseLookController != null) mouseLookController.Pause();
-            }
+            if (!lockCamereMovement) return;
+            if (mouseLookController != null) mouseLookController.Pause();
         }
     }
 }
