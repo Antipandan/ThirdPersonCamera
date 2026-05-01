@@ -2,6 +2,7 @@ using System;
 using DefaultNamespace;
 using Unity.Mathematics;
 using UnityEngine;
+using Utility;
 
 [RequireComponent(typeof(Rigidbody))]
 public class onCameraCollide : MonoBehaviour

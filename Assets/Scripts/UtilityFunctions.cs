@@ -3,7 +3,7 @@ using System.Runtime.CompilerServices;
 using Unity.Mathematics;
 using UnityEngine;
 
-namespace DefaultNamespace
+namespace Utility
 {
     public static class UtilityFunctions
     {
@@ -92,6 +92,7 @@ namespace DefaultNamespace
         /// <param name="x">New X value corresponding with the vectors old X value</param>
         /// <param name="y">New Y value corresponding with the vectors old Y value</param>
         /// <param name="vector">Vector2 instance to be modified</param>
+        /// 
         public static void ModifyVector2(float x, float y, ref Vector2 vector)
         {
             // Debug.Log($"function: {nameof(ModifyVector2)}, new values: ({x}, {y})");
@@ -107,7 +108,7 @@ namespace DefaultNamespace
         /// <returns>returns the magnitude</returns>
         public static float GetMagnitudeOfVector(Vector2 vector)
         {
-            Debug.Log( $"function name: {nameof(GetMagnitudeOfVector)} magnitude: {Mathf.Sqrt(vector.x * vector.x + vector.y * vector.y)}");
+            // Debug.Log( $"function name: {nameof(GetMagnitudeOfVector)} magnitude: {Mathf.Sqrt(vector.x * vector.x + vector.y * vector.y)}");
             if (vector == Vector2.zero) return 0f;
             return Mathf.Sqrt(vector.x * vector.x + vector.y * vector.y);
         }
@@ -157,10 +158,9 @@ namespace DefaultNamespace
         /// <returns>Returns a normalized Vector2</returns>
         public static Vector2 NormalizeVector(Vector2 vector)
         {
-            Debug.Log($"function: {nameof(NormalizeVector)}, new values: ({vector.x}, {vector.y})");
+            // Debug.Log($"function: {nameof(NormalizeVector)}, new values: ({vector.x}, {vector.y})");
             float magnitude = GetMagnitudeOfVector(vector);
-            if (magnitude == 0) return Vector2.zero;
-            return new Vector2(vector.x / magnitude, vector.y / magnitude);
+            return magnitude == 0 ? Vector2.zero : new Vector2(vector.x / magnitude, vector.y / magnitude);
         }
 
         /// <summary>
@@ -239,40 +239,30 @@ namespace DefaultNamespace
         {
             quaternion conjugate = ConjugateOfQuaternion(quat);
             float magnitude = GetMagnitudeOfQuaternion(conjugate);
+            if (magnitude == 0f) return quat;
+            // Debug.Log($"function: {nameof(ConjugateOfQuaternion)} magnitude: {magnitude}");
             return new quaternion(
                 conjugate.value.x / magnitude, conjugate.value.y / magnitude,
                 conjugate.value.z / magnitude, conjugate.value.w / magnitude);
         }
+
         
         /// <summary>
-        /// Rotate a position around a quaternion. Modifies the given position but doesn't rotate said object.
-        /// see equation 8.7 in https://gamemath.com/book/orient.html#quaternion_cross_product for further details 
+        /// Multiply a quaternion with another. Takes two quaternions as input and returns the product of said quaternions
+        /// see https://gamemath.com/book/orient.html#quaternion_cross_product for details
         /// </summary>
-        /// <param name="position">The position of a given object taken as a transform</param>
-        /// <param name="quat">quaternion to base the new positioning of the transform gameobject</param>
-        public static void RotateAboutQuaternion(Transform position, quaternion quat)
+        /// <param name="quaternion1"></param>
+        /// <param name="quaternion2"></param>
+        /// <returns>The product of two quaternions</returns>
+        public static quaternion MultiplyQuaternion(quaternion quaternion1, quaternion quaternion2)
         {
-            quaternion inverseQuaternion = InverseQuaternion(quat);
-            // Vektor som tillhör q1 / Q
-            Vector3 oldRotationVector = new Vector3(
-                quat.value.x,
-                quat.value.y,
-                quat.value.z);
-            // vektor som tillhör q2 / q^-1
-            Vector3 inverseRotationVector = new Vector3(
-                inverseQuaternion.value.x,
-                inverseQuaternion.value.y,
-                inverseQuaternion.value.z);
-            
-            // ekvation nedan
-            // V'
-            Vector3 newRotationVector = 
-                quat.value.w * inverseRotationVector +
-                inverseQuaternion.value.w * oldRotationVector +
-                CrossProduct(oldRotationVector, inverseRotationVector);
-            // W'. vi behöver inte W' för våra syften men har den här ifall att man behöver den i framtiden.
-            // float coefficient = quat.value.w * inverseQuaternion.value.w - DotProduct(oldRotationVector, inverseRotationVector);
-            position.position = newRotationVector;
+            // skapar instanser av Vector 3 för att göra det lättare att arbeta med
+            Vector3 quaternion1Vector = new Vector3(quaternion1.value.x, quaternion1.value.y, quaternion1.value.z) * quaternion2.value.w;
+            Vector3 quaternion2Vector = new Vector3(quaternion2.value.x, quaternion2.value.y, quaternion2.value.z) * quaternion1.value.w;
+            Vector3 newQuaternionVector = quaternion1Vector + quaternion2Vector + CrossProduct(quaternion1Vector, quaternion2Vector);
+            float realNumber = quaternion1.value.w * quaternion2.value.w - DotProduct(quaternion1Vector, newQuaternionVector);
+            return new quaternion(newQuaternionVector.x, newQuaternionVector.y, newQuaternionVector.z, realNumber);
         }
+        
     }
 }

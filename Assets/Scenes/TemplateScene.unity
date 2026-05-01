@@ -16574,6 +16574,7 @@ GameObject:
   - component: {fileID: 1498205441}
   - component: {fileID: 1498205440}
   - component: {fileID: 1498205442}
+  - component: {fileID: 1498205443}
   m_Layer: 0
   m_Name: Camera
   m_TagString: Untagged
@@ -16590,7 +16591,7 @@ Transform:
   m_GameObject: {fileID: 1498205426}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0.7071068, z: -0, w: 0.7071068}
-  m_LocalPosition: {x: 20.178999, y: 2.277, z: 3.5200002}
+  m_LocalPosition: {x: 20.178999, y: 2.277, z: 3.5200005}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -16936,6 +16937,21 @@ SphereCollider:
   serializedVersion: 3
   m_Radius: 0.41
   m_Center: {x: 0, y: 0, z: 0.26}
+--- !u!114 &1498205443
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1498205426}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 80ff35a28b9dfb8a9850824497134433, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  objectToRotateAround: {fileID: 1522075679}
+  mouseSpeed: 1
+  defaultLookingDirection: {x: 1, y: 1}
 --- !u!1 &1504829756
 GameObject:
   m_ObjectHideFlags: 0
@@ -17492,7 +17508,6 @@ GameObject:
   - component: {fileID: 1522075679}
   - component: {fileID: 1522075682}
   - component: {fileID: 1522075681}
-  - component: {fileID: 1522075680}
   - component: {fileID: 1522075684}
   - component: {fileID: 1522075686}
   - component: {fileID: 1522075685}
@@ -17520,23 +17535,6 @@ Transform:
   - {fileID: 920157923}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: -90, z: 0}
---- !u!114 &1522075680
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1522075678}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 80ff35a28b9dfb8a9850824497134433, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  objectToFollow: {fileID: 0}
-  mouseSpeed: 1
-  verticalAngle: 160
-  customEvents: {fileID: 1498205439}
-  defaultLookingDirection: {x: 1, y: 1}
 --- !u!114 &1522075681
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -24506,8 +24504,8 @@ Transform:
 SceneRoots:
   m_ObjectHideFlags: 0
   m_Roots:
-  - {fileID: 948324882}
   - {fileID: 1498205427}
+  - {fileID: 948324882}
   - {fileID: 1522075679}
   - {fileID: 919758297}
   - {fileID: 2124822011}

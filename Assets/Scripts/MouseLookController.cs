@@ -5,22 +5,18 @@ using Unity.Mathematics;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.TextCore.Text;
+using Utility;
 
 [Serializable]
 public class MouseLookController : MonoBehaviour, IPauseable
 {
     [SerializeField]
-    private Transform objectToFollow;
+    private Transform objectToRotateAround;
     
     [SerializeField]
     private float mouseSpeed = 1.0f;
-
-    [SerializeField, Range(0, 180)]
-    private float verticalAngle = 160;
-
-    [SerializeField] 
-    private CustomEvents customEvents;
-
+    
+    
     [SerializeField]
     private Vector2 defaultLookingDirection = new Vector2(1f, 1f);
     
@@ -56,16 +52,27 @@ public class MouseLookController : MonoBehaviour, IPauseable
     private void MouseLook()
     {
         Vector2 look = lookAction.ReadValue<Vector2>();
-        // Debug.Log($"looking direction: {look}");
         if (look == Vector2.zero) look = Vector2.zero;
         float hor = look.x;
         float ver = look.y;
-        //Debug.Log($"hor: {hor}, ver: {ver}");
+        
         UtilityFunctions.ModifyVector2(hor, ver, ref currentLookingDirection);
         rotationAngle = UtilityFunctions.GetMagnitudeOfVector(currentLookingDirection);
         currentLookingDirection = UtilityFunctions.NormalizeVector(currentLookingDirection);
-        Debug.Log($"current looking direction: {currentLookingDirection}");
-        
+        Vector3 mouseLookingDirection = new Vector3(0f, currentLookingDirection.x, currentLookingDirection.y);
+        UtilityFunctions.ConvertMouseVectorToQuaternionValue(1f, mouseLookingDirection, ref rotationQuaternion);
+        //quaternion deltaQuaternion = new quaternion(deltaPosition.x, deltaPosition.y, deltaPosition.z, 0f);
+        RotateAroundQuaternion();
+    }
+
+    private void RotateAroundQuaternion()
+    {
+        Vector3 deltaPosition = gameObject.transform.position - objectToRotateAround.position;
+        quaternion positionQuaternion = new quaternion(deltaPosition.x, deltaPosition.y, deltaPosition.z, 0f);
+        quaternion rotatedQuaternion = UtilityFunctions.MultiplyQuaternion(
+            UtilityFunctions.MultiplyQuaternion(rotationQuaternion, positionQuaternion),
+            UtilityFunctions.InverseQuaternion(rotationQuaternion));
+        gameObject.transform.position = new Vector3(rotatedQuaternion.value.x, rotatedQuaternion.value.y, rotatedQuaternion.value.z) + objectToRotateAround.position;
     }
     
 }
