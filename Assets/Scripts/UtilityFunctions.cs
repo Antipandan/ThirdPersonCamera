@@ -184,11 +184,13 @@ namespace Utility
         /// <param name="quat">quaternion to be modified</param>
         public static void ConvertMouseVectorToQuaternionValue(float angle, Vector3 unitVector, ref quaternion quat)
         {
-            float sinusValue = Mathf.Sin((angle /2f) * Mathf.Deg2Rad);
+            Debug.Log($"angle:  {angle}");
+            float sinusValue = Mathf.Sin((angle /2f));
+            Debug.Log($"cos: {Mathf.Cos((angle / 2f))}, sin vector{new Vector3(sinusValue * unitVector.x, sinusValue * unitVector.y, sinusValue * unitVector.z)}");
             quat.value.x = sinusValue * unitVector.x;
             quat.value.y = sinusValue * unitVector.y;
             quat.value.z = sinusValue * unitVector.z;
-            quat.value.w = Mathf.Cos((angle / 2f) * Mathf.Deg2Rad);
+            quat.value.w = Mathf.Cos((angle / 2f));
         }
         /// <summary>
         /// Calculates a quaternion which is responsible for rotation an object about the Y and Z axis
@@ -297,7 +299,6 @@ namespace Utility
             quaternion positionQuaternion = new quaternion(position.x, position.y, position.z, 0f);
             quaternion inverseQuaternion = InverseQuaternion(quat);
             quaternion rotatedQuaternion = MultiplyQuaternion(MultiplyQuaternion(quat, positionQuaternion), inverseQuaternion);
-            Debug.Log($"rotatedQuaternion: {rotatedQuaternion}");
             return rotatedQuaternion;
         }
         
