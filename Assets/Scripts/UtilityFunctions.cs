@@ -66,6 +66,7 @@ namespace Utility
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Vector3 CrossProduct(Vector3 v1, Vector3 v2)
         {
+            
             return new Vector3(v1.y*v2.z - v2.y*v1.z, v1.z*v2.x - v2.z*v1.x, v1.x*v2.y - v2.x*v1.y);
         }
         
@@ -184,9 +185,10 @@ namespace Utility
         /// <param name="quat">quaternion to be modified</param>
         public static void ConvertMouseVectorToQuaternionValue(float angle, Vector3 unitVector, ref quaternion quat)
         {
-            Debug.Log($"angle:  {angle}");
+            if (unitVector == Vector3.zero) return;
+            // Debug.Log($"pitch angle: {Mathf.Atan2(unitVector.x, unitVector.z) * Mathf.Rad2Deg} ");
             float sinusValue = Mathf.Sin((angle /2f));
-            Debug.Log($"cos: {Mathf.Cos((angle / 2f))}, sin vector{new Vector3(sinusValue * unitVector.x, sinusValue * unitVector.y, sinusValue * unitVector.z)}");
+            // Debug.Log($"cos: {Mathf.Cos((angle / 2f))}, sin vector{new Vector3(sinusValue * unitVector.x, sinusValue * unitVector.y, sinusValue * unitVector.z)}");
             quat.value.x = sinusValue * unitVector.x;
             quat.value.y = sinusValue * unitVector.y;
             quat.value.z = sinusValue * unitVector.z;
@@ -260,7 +262,7 @@ namespace Utility
             // skapar instanser av Vector 3 för att göra det lättare att arbeta med
             Vector3 quaternion1Vector = new Vector3(quaternion1.value.x, quaternion1.value.y, quaternion1.value.z) * quaternion2.value.w;
             Vector3 quaternion2Vector = new Vector3(quaternion2.value.x, quaternion2.value.y, quaternion2.value.z) * quaternion1.value.w;
-            Vector3 newQuaternionVector = quaternion1Vector + quaternion2Vector + CrossProduct(quaternion1Vector, quaternion2Vector);
+            Vector3 newQuaternionVector = quaternion2Vector + quaternion1Vector + CrossProduct(quaternion1Vector, quaternion2Vector);
             float realNumber = quaternion1.value.w * quaternion2.value.w - DotProduct(quaternion1Vector, newQuaternionVector);
             return new quaternion(newQuaternionVector.x, newQuaternionVector.y, newQuaternionVector.z, realNumber);
         }
@@ -268,13 +270,13 @@ namespace Utility
         /// <summary>
         /// Rotates a position around a quaternion.
         /// </summary>
-        /// <param name="quat"></param>
+        /// <param name="rotationQuaternion"></param>
         /// <param name="positionQuaternion"></param>
         /// <returns>quaternion that represents new rotation</returns>
-        public static quaternion RotateAroundQuaternion(quaternion quat, quaternion positionQuaternion)
+        public static quaternion RotateAroundQuaternion(quaternion rotationQuaternion, quaternion positionQuaternion)
         {
-            quaternion inverseQuaternion = InverseQuaternion(quat);
-            return MultiplyQuaternion(MultiplyQuaternion(quat,  positionQuaternion), inverseQuaternion);
+            quaternion inverseQuaternion = InverseQuaternion(rotationQuaternion);
+            return MultiplyQuaternion(MultiplyQuaternion(rotationQuaternion,  positionQuaternion), inverseQuaternion);
         }
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool CompareQuaternions(quaternion quat1, quaternion quat2)
@@ -291,15 +293,32 @@ namespace Utility
         /// <summary>
         /// Rotates a position around a quaternion.
         /// </summary>
-        /// <param name="quat">Quaternion to rotate with</param>
+        /// <param name="rotationQuaternion">Quaternion to rotate with</param>
         /// <param name="position">position in Vector3 that should be rotated</param>
         /// <returns>quaternion that represents new rotation</returns>
-        public static quaternion RotateAroundQuaternion(quaternion quat, Vector3 position)
+        public static quaternion RotateAroundQuaternion(quaternion rotationQuaternion, Vector3 position)
         {
             quaternion positionQuaternion = new quaternion(position.x, position.y, position.z, 0f);
-            quaternion inverseQuaternion = InverseQuaternion(quat);
-            quaternion rotatedQuaternion = MultiplyQuaternion(MultiplyQuaternion(quat, positionQuaternion), inverseQuaternion);
+            quaternion inverseQuaternion = InverseQuaternion(rotationQuaternion);
+            quaternion rotatedQuaternion = MultiplyQuaternion(MultiplyQuaternion(rotationQuaternion, positionQuaternion), inverseQuaternion);
             return rotatedQuaternion;
+        }
+
+        public static Vector3 ConvertQuaternionToEulerAngles(quaternion quat)
+        {
+            // lättare att läsa anser jag
+            float x = quat.value.x, y = quat.value.y, z = quat.value.z, w = quat.value.w;
+            float pitch = Mathf.Asin(-2 * (y * z - w * x));
+            float heading = pitch != 0f ? Mathf.Atan2(x * z + w * y, (-(x * x) - (y * y)) / 2f) : Mathf.Atan2(-x * z + w * y, (-(y*y) - (z*z)) / 2f);
+            // om man behöver pitch så läggs den till här!
+            float bank = pitch != 0f ? 0f : 0f;
+            return new Vector3(heading, pitch, bank) * Mathf.Rad2Deg;
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static void OverlapAngleValues(ref Vector3 eulerAngles)
+        {
+            eulerAngles = new Vector3((eulerAngles.x + 360f) % 360f, (eulerAngles.y + 360f) % 360f, (eulerAngles.z + 360f) % 360f);
         }
         
     }

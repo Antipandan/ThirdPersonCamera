@@ -21,7 +21,6 @@ public class MouseLookController : MonoBehaviour, IPauseable
     private Vector2 defaultLookingDirection = new Vector2(1f, 1f);
     
     private float rotationAngle;
-    private Vector2 currentLookingDirection;
     private InputAction lookAction;
     private quaternion rotationQuaternion;
     private bool isPaused;
@@ -57,24 +56,29 @@ public class MouseLookController : MonoBehaviour, IPauseable
 
         using (vectorRenderer.Begin())
         {
-            vectorRenderer.Draw(objectToRotateAround.position, objectToRotateAround.position + currentMouseLookingDirection, Color.yellow);
+            vectorRenderer.Draw(objectToRotateAround.position, objectToRotateAround.position + new Vector3(0f, 1f, 0f).normalized, Color.yellow);
         }
     }
 
     private void MouseLook()
     {
-        Vector2 look = lookAction.ReadValue<Vector2>();
+        Vector2 look = lookAction.ReadValue<Vector2>() * (Time.deltaTime * 100f);
         if (look == Vector2.zero) look = Vector2.zero;
-        float hor = (look.x) * Time.deltaTime * 100f;
-        float ver = (look.y) * Time.deltaTime * 100f;
+        // float hor = (look.x) * Time.deltaTime * 100f;
+        // float ver = (look.y) * Time.deltaTime * 100f;
+        Vector3 relativeEulerAngles = new Vector3();
         
-        UtilityFunctions.ModifyVector2(hor, ver, ref currentLookingDirection);
-        rotationAngle = UtilityFunctions.GetMagnitudeOfVector(currentLookingDirection);
-        currentLookingDirection = UtilityFunctions.NormalizeVector(currentLookingDirection);
-        currentMouseLookingDirection= new Vector3(0f, currentLookingDirection.x, currentLookingDirection.y);
-        UtilityFunctions.ConvertMouseVectorToQuaternionValue(rotationAngle, currentMouseLookingDirection, ref rotationQuaternion);
+        rotationAngle = UtilityFunctions.GetMagnitudeOfVector(look);
+        look = UtilityFunctions.NormalizeVector(look);
+        Debug.Log($"look: {look}");
+        currentMouseLookingDirection = new Vector3(look.y, look.x,0f);
+        UtilityFunctions.ConvertMouseVectorToQuaternionValue(180f, new Vector3(0f, 0f, 0f), ref rotationQuaternion);
+        Debug.Log($"rotationQuaternion: {rotationQuaternion}");
+        relativeEulerAngles = UtilityFunctions.ConvertQuaternionToEulerAngles(rotationQuaternion);
+        UtilityFunctions.OverlapAngleValues(ref relativeEulerAngles);
+        // Debug.Log(relativeEulerAngles);
         quaternion rotatedQuaternion = UtilityFunctions.RotateAroundQuaternion(rotationQuaternion, gameObject.transform.position - objectToRotateAround.position);
-        // gameObject.transform.position = new Vector3(rotatedQuaternion.value.x, rotatedQuaternion.value.y, rotatedQuaternion.value.z) + objectToRotateAround.position;
+        gameObject.transform.position = new Vector3(rotatedQuaternion.value.x, rotatedQuaternion.value.y, rotatedQuaternion.value.z) + objectToRotateAround.position;
     }
     
     
