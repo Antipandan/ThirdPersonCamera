@@ -7,7 +7,7 @@ using Utility;
 public class rotateQuaternion : MonoBehaviour
 {
 
-    private readonly float angle = 45f; // degrees
+    private readonly float angle = 5f; // degrees
     private Vector3 startingPosition = new Vector3(0f, 0f, 0f);
 
     private void Awake()
@@ -24,7 +24,7 @@ public class rotateQuaternion : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        Vector3 rotationVector = new Vector3(0f, 1f, 0f).normalized;
+        Vector3 rotationVector = new Vector3(1f, 0f, 0f).normalized;
         Quaternion rotationQuaternion = QuaternionUtils.CreateFromAxisAngle(rotationVector, angle);
         Vector3 rotated = QuaternionUtils.RotateVector(rotationQuaternion, startingPosition);
         Debug.Log($"rotated: {rotated}");
@@ -49,19 +49,19 @@ public static class QuaternionUtils
     }
 
     // Hamilton product: result = a * b
-    public static Quaternion Multiply(Quaternion a, Quaternion b)
+    public static Quaternion Multiply(Quaternion q1, Quaternion q2)
     {
-        float w = a.w * b.w - a.x * b.x - a.y * b.y - a.z * b.z;
-        float x = a.w * b.x + a.x * b.w + a.y * b.z - a.z * b.y;
-        float y = a.w * b.y - a.x * b.z + a.y * b.w + a.z * b.x;
-        float z = a.w * b.z + a.x * b.y - a.y * b.x + a.z * b.w;
-        return new Quaternion(x, y, z, w);
+        Vector3 v1 = new Vector3(q1.x, q1.y, q1.z);
+        Vector3 v2 = new Vector3(q2.x, q2.y, q2.z);
+        Vector3 newVector = q1.w * v2 + q2.w * v1 + UtilityFunctions.CrossProduct(v1, v2);
+        float w = q1.w * q2.w - UtilityFunctions.DotProduct(v1, v2);
+        return new Quaternion(newVector.x, newVector.y, newVector.z, w);
     }
 
     // Conjugate (for unit quaternions inverse = conjugate)
-    public static Quaternion Conjugate(Quaternion q)
+    public static Quaternion Conjugate(Quaternion quat)
     {
-        return new Quaternion(-q.x, -q.y, -q.z, q.w);
+        return new Quaternion(-quat.x, -quat.y, -quat.z, quat.w);
     }
 
     // Rotate a Vector3 v by quaternion q using p' = q * p * q_conj
