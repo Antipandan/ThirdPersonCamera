@@ -163,7 +163,7 @@ namespace Utility
         }
         
         /// <summary>
-        /// Calculates a quaternion which is responsible for rotation an object about the Y and Z axis
+        /// Calculates a quaternion which is responsible for rotation an object about the X and Y axis
         /// (heading and pitch). Calculate said quaternion based on an input vector.Takes a reference to an existing quaternion
         /// </summary>
         /// <param name="angle">the angle to rotate in degrees</param>
@@ -180,7 +180,7 @@ namespace Utility
         }
         
         /// <summary>
-        /// Calculates a quaternion which is responsible for rotation an object about the Y and Z axis
+        /// Calculates a quaternion which is responsible for rotation an object about the X and Y axis
         /// (heading and pitch). Calculate said quaternion based on an input vector.Takes a reference to an existing quaternion
         /// </summary>
         /// <param name="angle">the angle to rotate in degrees</param>
@@ -244,8 +244,8 @@ namespace Utility
         /// the conjugate is returned
         /// see https://gamemath.com/book/orient.html#quaternion_conjugate equation 8.6 for details
         /// </summary>
-        /// <param name="quat"></param>
-        /// <returns>The </returns>
+        /// <param name="quat">Quaternion to turn into the inverse of itself</param>
+        /// <returns>The Inverse of a given Quaternion</returns>
         
         public static Quaternion InverseQuaternion(Quaternion quat)
         {
@@ -266,9 +266,8 @@ namespace Utility
         /// </summary>
         /// <param name="q1">First Quaternion</param>
         /// <param name="q2">Second Quaternion</param>
-        /// <returns>The product of two Quaternions</returns>
+        /// <returns>The Hamilton product of two Quaternions</returns>
         
-        // Hamilton product: result = q1 * q2
         public static Quaternion MultiplyQuaternion(Quaternion q1, Quaternion q2)
         {
             Vector3 v1 = new Vector3(q1.x, q1.y, q1.z);
@@ -278,6 +277,12 @@ namespace Utility
             return new Quaternion(newVector.x, newVector.y, newVector.z, w);
         }
 
+        /// <summary>
+        /// Convert a Quaternion to Vector3 containing Heading, Pitch and Roll rotations.
+        /// See https://gamemath.com/book/orient.html#quaternion_to_euler_angles for details
+        /// </summary>
+        /// <param name="quat"></param>
+        /// <returns></returns>
         public static Vector3 ConvertQuaternionToEulerAngles(quaternion quat)
         {
             // lättare att läsa anser jag
@@ -288,7 +293,11 @@ namespace Utility
             float bank = pitch != 0f ? 0f : 0f;
             return new Vector3(heading, pitch, bank) * Mathf.Rad2Deg;
         }
-
+        /// <summary>
+        /// remove reoccuring values for trigonometric functions by performing
+        /// a modulus operation to bring back down values exceeding 360 degrees
+        /// </summary>
+        /// <param name="eulerAngles">Euler angles in the form of Vector3(Heading, Pitch, Roll) note that order doesn't really matter</param>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static void OverlapAngleValues(ref Vector3 eulerAngles)
         {
