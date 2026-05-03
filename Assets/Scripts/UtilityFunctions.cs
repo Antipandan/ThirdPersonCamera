@@ -36,7 +36,7 @@ namespace Utility
         /// </summary>
         /// <param name="v1">First Vector2</param>
         /// <param name="v2">Second Vector2</param>
-        /// <returns></returns>
+        /// <returns>Scalar representing the dot product</returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static float DotProduct(Vector2 v1, Vector2 v2)
         {
@@ -49,7 +49,7 @@ namespace Utility
         /// </summary>
         /// <param name="v1">First Vector3</param>
         /// <param name="v2">Second Vector3</param>
-        /// <returns></returns>
+        /// <returns>Scalar representing the dot product</returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static float DotProduct(Vector3 v1, Vector3 v2)
         {
@@ -62,29 +62,11 @@ namespace Utility
         /// </summary>
         /// <param name="v1">First Vector3</param>
         /// <param name="v2">Second Vector3</param>
-        /// <returns></returns>
+        /// <returns>Vector3 that represents the cross product</returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Vector3 CrossProduct(Vector3 v1, Vector3 v2)
         {
-            
             return new Vector3(v1.y*v2.z - v2.y*v1.z, v1.z*v2.x - v2.z*v1.x, v1.x*v2.y - v2.x*v1.y);
-        }
-        
-        /// <summary>
-        /// Modifies a quaternion struct with new x, y, z and w values. Takes a reference to an existing quaternion
-        /// </summary>
-        /// <param name="x">First factor corresponding with the first imaginary part of the quaternion's vector</param>
-        /// <param name="y">Second factor corresponding with the Second imaginary part of the quaternion's vector</param>
-        /// <param name="z">Third factor corresponding with the third imaginary part of the quaternion's vector</param>
-        /// <param name="w">First factor corresponding with the real number of the quaternion</param>
-        /// <param name="quat">quaternion instance to be modified</param>
-        public static void ModifyQuaternion(float x, float y, float z, float w, ref quaternion quat)
-        {
-            // det kanske är bättre att skapa en ny quaternion eftersom den är liten men testar att göra så här istället
-            quat.value.x = x;
-            quat.value.y = y;
-            quat.value.z = z;
-            quat.value.w = w;
         }
         
         /// <summary>
@@ -93,10 +75,9 @@ namespace Utility
         /// <param name="x">New X value corresponding with the vectors old X value</param>
         /// <param name="y">New Y value corresponding with the vectors old Y value</param>
         /// <param name="vector">Vector2 instance to be modified</param>
-        /// 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static void ModifyVector2(float x, float y, ref Vector2 vector)
         {
-            // Debug.Log($"function: {nameof(ModifyVector2)}, new values: ({x}, {y})");
             vector.x = x;
             vector.y = y;
         }
@@ -107,10 +88,10 @@ namespace Utility
         /// </summary>
         /// <param name="vector">Vector2 instance to get the magnitude of</param>
         /// <returns>returns the magnitude</returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static float GetMagnitudeOfVector(Vector2 vector)
         {
-            // Debug.Log( $"function name: {nameof(GetMagnitudeOfVector)} magnitude: {Mathf.Sqrt(vector.x * vector.x + vector.y * vector.y)}");
-            if (vector == Vector2.zero) return 0f;
+            if (vector == Vector2.zero) return 1f;
             return Mathf.Sqrt(vector.x * vector.x + vector.y * vector.y);
         }
         
@@ -120,9 +101,11 @@ namespace Utility
         /// </summary>
         /// <param name="vector">Vector3 instance to get the magnitude of</param>
         /// <returns>returns the magnitude</returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static float GetMagnitudeOfVector(Vector3 vector)
         {
-            if (vector == Vector3.zero) return 0f;
+            // lite av en bandaid fix men så här gör vi!
+            if (vector == Vector3.zero) return 1f;
             return Mathf.Sqrt(vector.x * vector.x + vector.y * vector.y);
         }
 
@@ -131,6 +114,7 @@ namespace Utility
         /// see https://gamemath.com/book/vectors.html#normalized_vectors for details
         /// </summary>
         /// <param name="vector">Vector2 instance to turn into a normalized Vector2</param>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static void NormalizeVector(ref Vector2 vector)
         {
             float magnitude = GetMagnitudeOfVector(vector);
@@ -143,6 +127,7 @@ namespace Utility
         /// see https://gamemath.com/book/vectors.html#normalized_vectors for details
         /// </summary>
         /// <param name="vector">Vector3 instance to turn into a normalized Vector2</param>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static void NormalizeVector(ref Vector3 vector)
         {
             float magnitude = GetMagnitudeOfVector(vector);
@@ -157,12 +142,11 @@ namespace Utility
         /// </summary>
         /// <param name="vector">Vector2 instance to turn into a normalized Vector2</param>
         /// <returns>Returns a normalized Vector2</returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Vector2 NormalizeVector(Vector2 vector)
         {
-            // Debug.Log($"function: {nameof(NormalizeVector)}, new values: ({vector.x}, {vector.y})");
-            // float magnitude = GetMagnitudeOfVector(vector);
-            // testar
-            return vector.normalized;
+            float magnitude = GetMagnitudeOfVector(vector);
+            return new Vector2(vector.x / magnitude, vector.y / magnitude);
         }
 
         /// <summary>
@@ -171,6 +155,7 @@ namespace Utility
         /// </summary>
         /// <param name="vector">Vector3 instance to turn into a normalized Vector3</param>
         /// <returns>Returns a normalized Vector3</returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Vector3 NormalizeVector(Vector3 vector)
         {
             float magnitude = GetMagnitudeOfVector(vector);
@@ -184,17 +169,16 @@ namespace Utility
         /// <param name="angle">the angle to rotate in degrees</param>
         /// <param name="unitVector">unit vector to rotate around</param>
         /// <param name="quat">quaternion to be modified</param>
-        public static void ConvertMouseVectorToQuaternionValue(float angle, Vector3 unitVector, ref quaternion quat)
+        public static void ConvertMouseVectorToQuaternionValue(float angle, Vector3 unitVector, ref Quaternion quat)
         {
             if (unitVector == Vector3.zero) return;
-            // Debug.Log($"pitch angle: {Mathf.Atan2(unitVector.x, unitVector.z) * Mathf.Rad2Deg} ");
             float sinusValue = Mathf.Sin((angle /2f));
-            // Debug.Log($"cos: {Mathf.Cos((angle / 2f))}, sin vector{new Vector3(sinusValue * unitVector.x, sinusValue * unitVector.y, sinusValue * unitVector.z)}");
-            quat.value.x = sinusValue * unitVector.x;
-            quat.value.y = sinusValue * unitVector.y;
-            quat.value.z = sinusValue * unitVector.z;
-            quat.value.w = Mathf.Cos((angle / 2f));
+            quat.x = sinusValue * unitVector.x;
+            quat.y = sinusValue * unitVector.y;
+            quat.z = sinusValue * unitVector.z;
+            quat.w = Mathf.Cos((angle / 2f));
         }
+        
         /// <summary>
         /// Calculates a quaternion which is responsible for rotation an object about the Y and Z axis
         /// (heading and pitch). Calculate said quaternion based on an input vector.Takes a reference to an existing quaternion
@@ -211,100 +195,87 @@ namespace Utility
                 sinusValue * unitVector.z,
                 Mathf.Cos(angle / 2f * Mathf.Deg2Rad));
         }
+        
+        public static Quaternion AxisAngleQuaternion(Vector3 axis, float angleDegrees)
+        {
+            float angleRad = angleDegrees * Mathf.Deg2Rad * 0.5f;
+            axis = axis.normalized;
+            float s = Mathf.Sin(angleRad);
+            float c = Mathf.Cos(angleRad);
+            return new Quaternion(axis.x * s, axis.y * s, axis.z * s, c);
+        }
+        
+        public static Vector3 RotatePosition(Quaternion rotationQuaternion, Vector3 position)
+        {
+            Quaternion quatPosition = new Quaternion(position.x, position.y, position.z, 0f);
+            Quaternion inverseQuaternion = InverseQuaternion(rotationQuaternion);
+            Quaternion rotatedPosition = MultiplyQuaternion(MultiplyQuaternion(rotationQuaternion, quatPosition), inverseQuaternion);
+
+            return new Vector3(rotatedPosition.x, rotatedPosition.y, rotatedPosition.z);
+        }
+
         /// <summary>
         /// Calculate the Conjugate of a given quaternion. Returns a new conjugate quaternion.
         /// See https://gamemath.com/book/orient.html#quaternion_conjugate equation 8.6
         /// </summary>
         /// <param name="quat">quaternion to use to get conjugate</param>
         /// <returns>Conjugate quaternion</returns>
-        public static quaternion ConjugateOfQuaternion(quaternion quat)
-        {
-            return new quaternion(quat.value.x * -1,  quat.value.y * -1, quat.value.z * -1, quat.value.w);
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Quaternion ConjugateQuaternion(Quaternion quat)
+        {   
+            return new Quaternion(-quat.x, -quat.y, -quat.z, quat.w);
         }
+        
 
         /// <summary>
         /// Calculate the Magnitude of a quaternion. see https://gamemath.com/book/orient.html#quaternion_magnitude
         /// equation 8.4
         /// </summary>
-        /// <param name="quat">quaternion to get the magnitude from</param>
-        /// <returns>magnitude of quaternion</returns>
-        public static float GetMagnitudeOfQuaternion(quaternion quat)
+        /// <param name="quat">Quaternion to get the magnitude from</param>
+        /// <returns>Magnitude of quaternion</returns>
+        /// 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static float GetMagnitudeQuaternion(Quaternion quat)
         {
-            return Mathf.Sqrt(
-                quat.value.x * quat.value.x + quat.value.y * quat.value.y +
-                quat.value.z * quat.value.z + quat.value.w * quat.value.w);
+            return Mathf.Sqrt(quat.x * quat.x + quat.y * quat.y + quat.z * quat.z + quat.w * quat.w);
         }
         /// <summary>
-        /// Calculate the inverse of a given quaternion. returns a new quaternion.
+        /// Calculate the inverse of a given quaternion. returns a new quaternion. If quaternion is unit quaternion
+        /// the conjugate is returned
         /// see https://gamemath.com/book/orient.html#quaternion_conjugate equation 8.6 for details
         /// </summary>
         /// <param name="quat"></param>
-        /// <returns></returns>
-        public static quaternion InverseQuaternion(quaternion quat)
+        /// <returns>The </returns>
+        
+        public static Quaternion InverseQuaternion(Quaternion quat)
         {
-            quaternion conjugate = ConjugateOfQuaternion(quat);
-            float magnitude = GetMagnitudeOfQuaternion(conjugate);
-            if (magnitude == 0f) return quat;
-            // Debug.Log($"function: {nameof(ConjugateOfQuaternion)} magnitude: {magnitude}");
-            return new quaternion(
-                conjugate.value.x / magnitude, conjugate.value.y / magnitude,
-                conjugate.value.z / magnitude, conjugate.value.w / magnitude);
+            float magnitude = GetMagnitudeQuaternion(quat);
+            Quaternion conjugateQuaternion = ConjugateQuaternion(quat);
+            if (magnitude == 0f || Mathf.Approximately(magnitude, 1f)) return conjugateQuaternion;
+            return new Quaternion(
+                conjugateQuaternion.x / magnitude,
+                conjugateQuaternion.y / magnitude,
+                conjugateQuaternion.z / magnitude,
+                conjugateQuaternion.w / magnitude);
         }
+        
         
         /// <summary>
         /// Multiply a quaternion with another. Takes two quaternions as input and returns the product of said quaternions
         /// see https://gamemath.com/book/orient.html#quaternion_cross_product for details
         /// </summary>
-        /// <param name="quaternion1"></param>
-        /// <param name="quaternion2"></param>
-        /// <returns>The product of two quaternions</returns>
-        public static quaternion MultiplyQuaternion(quaternion quaternion1, quaternion quaternion2)
-        {
-            // skapar instanser av Vector 3 för att göra det lättare att arbeta med
-            Vector3 quaternion1Vector = new Vector3(quaternion1.value.x, quaternion1.value.y, quaternion1.value.z) * quaternion2.value.w;
-            Vector3 quaternion2Vector = new Vector3(quaternion2.value.x, quaternion2.value.y, quaternion2.value.z) * quaternion1.value.w;
-            Vector3 newQuaternionVector = quaternion2Vector + quaternion1Vector + CrossProduct(quaternion1Vector, quaternion2Vector);
-            float realNumber = quaternion1.value.w * quaternion2.value.w - DotProduct(quaternion1Vector, newQuaternionVector);
-            return new quaternion(newQuaternionVector.x, newQuaternionVector.y, newQuaternionVector.z, realNumber);
-        }
-
-        /// <summary>
-        /// Rotates a position around a quaternion.
-        /// </summary>
-        /// <param name="rotationQuaternion"></param>
-        /// <param name="positionQuaternion"></param>
-        /// <returns>quaternion that represents new rotation</returns>
-        public static quaternion RotateAroundQuaternion(quaternion rotationQuaternion, quaternion positionQuaternion)
-        {
-            quaternion inverseQuaternion = InverseQuaternion(rotationQuaternion);
-            return MultiplyQuaternion(MultiplyQuaternion(rotationQuaternion,  positionQuaternion), inverseQuaternion);
-        }
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static bool CompareQuaternions(quaternion quat1, quaternion quat2)
-        {
-            // behöver denna funktion för att kolla för likhet mellan kvaternioner
-            // denna implemenation kanske inte är den bästa men det fungerar
-            float tolerance = 0.00001f;
-            return Math.Abs(quat1.value.w - quat2.value.w) < tolerance &
-                   Math.Abs(quat1.value.x - quat2.value.x) < tolerance &
-                   Math.Abs(quat1.value.y - quat2.value.y) < tolerance &
-                   Math.Abs(quat1.value.z - quat2.value.z) < tolerance;
-        }
+        /// <param name="q1">First Quaternion</param>
+        /// <param name="q2">Second Quaternion</param>
+        /// <returns>The product of two Quaternions</returns>
         
-        /// <summary>
-        /// Rotates a position around a quaternion.
-        /// </summary>
-        /// <param name="rotationQuaternion">Quaternion to rotate with</param>
-        /// <param name="position">position in Vector3 that should be rotated</param>
-        /// <returns>quaternion that represents new rotation</returns>
-        public static quaternion RotateAroundQuaternion(quaternion rotationQuaternion, Vector3 position)
+        // Hamilton product: result = q1 * q2
+        public static Quaternion MultiplyQuaternion(Quaternion q1, Quaternion q2)
         {
-            // Debug.Log($"quaternion: {rotationQuaternion}");
-            // Debug.Log($"position: {position}");
-            quaternion positionQuaternion = new quaternion(position.x, position.y, position.z, 0f);
-            quaternion inverseQuaternion = InverseQuaternion(rotationQuaternion);
-            quaternion rotatedQuaternion = MultiplyQuaternion(MultiplyQuaternion(rotationQuaternion, positionQuaternion), inverseQuaternion);
-            return rotatedQuaternion;
+            Vector3 v1 = new Vector3(q1.x, q1.y, q1.z);
+            Vector3 v2 = new Vector3(q2.x, q2.y, q2.z);
+            Vector3 newVector = q1.w * v2 + q2.w * v1 + CrossProduct(v1, v2);
+            float w = q1.w * q2.w - DotProduct(v1, v2);
+            return new Quaternion(newVector.x, newVector.y, newVector.z, w);
         }
 
         public static Vector3 ConvertQuaternionToEulerAngles(quaternion quat)
@@ -323,6 +294,5 @@ namespace Utility
         {
             eulerAngles = new Vector3((eulerAngles.x + 360f) % 360f, (eulerAngles.y + 360f) % 360f, (eulerAngles.z + 360f) % 360f);
         }
-        
     }
 }

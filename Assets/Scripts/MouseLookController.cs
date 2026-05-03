@@ -22,7 +22,6 @@ public class MouseLookController : MonoBehaviour, IPauseable
     
     private float rotationAngle;
     private InputAction lookAction;
-    private quaternion rotationQuaternion;
     private bool isPaused;
     private VectorRenderer vectorRenderer;
     private Vector3 currentMouseLookingDirection;
@@ -37,7 +36,6 @@ public class MouseLookController : MonoBehaviour, IPauseable
     
     private void Awake()
     {
-        rotationQuaternion = new quaternion(0f, 0f, 0f, 0f);
         lookAction = InputSystem.actions.FindAction("Look");
     }
 
@@ -51,7 +49,7 @@ public class MouseLookController : MonoBehaviour, IPauseable
     {
         if (!isPaused)
         {
-            // MouseLook();
+            MouseLook();
         }
 
         using (vectorRenderer.Begin())
@@ -63,19 +61,12 @@ public class MouseLookController : MonoBehaviour, IPauseable
     private void MouseLook()
     {
         Vector2 look = lookAction.ReadValue<Vector2>() * (Time.deltaTime * 100f);
-        if (look == Vector2.zero) return;
-        // float hor = (look.x) * Time.deltaTime * 100f;
-        // float ver = (look.y) * Time.deltaTime * 100f;
-        rotationAngle = UtilityFunctions.GetMagnitudeOfVector(look);
         look = UtilityFunctions.NormalizeVector(look);
-        Debug.Log($"look: {look}");
-        currentMouseLookingDirection = new Vector3(look.x, look.y,0f);
-        UtilityFunctions.ConvertMouseVectorToQuaternionValue(15f * Time.deltaTime, currentMouseLookingDirection, ref rotationQuaternion);
-        // Debug.Log(relativeEulerAngles);
-        quaternion rotatedQuaternion = UtilityFunctions.RotateAroundQuaternion(rotationQuaternion, gameObject.transform.position - objectToRotateAround.position);
-        // Debug.Log($"rotated quaternion: {rotatedQuaternion}");
-        gameObject.transform.position = new Vector3(rotatedQuaternion.value.x, rotatedQuaternion.value.y, rotatedQuaternion.value.z) + objectToRotateAround.position;
-
+        currentMouseLookingDirection = new Vector3(look.x, look.y, 0f) * mouseSpeed;
+        float rotationAmount = UtilityFunctions.GetMagnitudeOfVector(look);
+        Quaternion rotationQuaternion = UtilityFunctions.AxisAngleQuaternion(currentMouseLookingDirection, rotationAmount);
+        Vector3 newPosition = UtilityFunctions.RotatePosition(rotationQuaternion, gameObject.transform.position);
+        gameObject.transform.position = newPosition;
     }
     
     
