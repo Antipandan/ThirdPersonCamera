@@ -51,34 +51,31 @@ public class MouseLookController : MonoBehaviour, IPauseable
     {
         if (!isPaused)
         {
-            MouseLook();
+            // MouseLook();
         }
 
         using (vectorRenderer.Begin())
         {
-            vectorRenderer.Draw(objectToRotateAround.position, objectToRotateAround.position + new Vector3(0f, 1f, 0f).normalized, Color.yellow);
+            vectorRenderer.Draw(objectToRotateAround.position, objectToRotateAround.position + currentMouseLookingDirection, Color.yellow);
         }
     }
 
     private void MouseLook()
     {
         Vector2 look = lookAction.ReadValue<Vector2>() * (Time.deltaTime * 100f);
-        if (look == Vector2.zero) look = Vector2.zero;
+        if (look == Vector2.zero) return;
         // float hor = (look.x) * Time.deltaTime * 100f;
         // float ver = (look.y) * Time.deltaTime * 100f;
-        Vector3 relativeEulerAngles = new Vector3();
-        
         rotationAngle = UtilityFunctions.GetMagnitudeOfVector(look);
         look = UtilityFunctions.NormalizeVector(look);
         Debug.Log($"look: {look}");
-        currentMouseLookingDirection = new Vector3(look.y, look.x,0f);
-        UtilityFunctions.ConvertMouseVectorToQuaternionValue(180f, new Vector3(0f, 0f, 0f), ref rotationQuaternion);
-        Debug.Log($"rotationQuaternion: {rotationQuaternion}");
-        relativeEulerAngles = UtilityFunctions.ConvertQuaternionToEulerAngles(rotationQuaternion);
-        UtilityFunctions.OverlapAngleValues(ref relativeEulerAngles);
+        currentMouseLookingDirection = new Vector3(look.x, look.y,0f);
+        UtilityFunctions.ConvertMouseVectorToQuaternionValue(15f * Time.deltaTime, currentMouseLookingDirection, ref rotationQuaternion);
         // Debug.Log(relativeEulerAngles);
         quaternion rotatedQuaternion = UtilityFunctions.RotateAroundQuaternion(rotationQuaternion, gameObject.transform.position - objectToRotateAround.position);
+        // Debug.Log($"rotated quaternion: {rotatedQuaternion}");
         gameObject.transform.position = new Vector3(rotatedQuaternion.value.x, rotatedQuaternion.value.y, rotatedQuaternion.value.z) + objectToRotateAround.position;
+
     }
     
     

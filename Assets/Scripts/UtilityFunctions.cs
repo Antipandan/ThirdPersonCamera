@@ -160,8 +160,9 @@ namespace Utility
         public static Vector2 NormalizeVector(Vector2 vector)
         {
             // Debug.Log($"function: {nameof(NormalizeVector)}, new values: ({vector.x}, {vector.y})");
-            float magnitude = GetMagnitudeOfVector(vector);
-            return magnitude == 0 ? Vector2.zero : new Vector2(vector.x / magnitude, vector.y / magnitude);
+            // float magnitude = GetMagnitudeOfVector(vector);
+            // testar
+            return vector.normalized;
         }
 
         /// <summary>
@@ -298,6 +299,8 @@ namespace Utility
         /// <returns>quaternion that represents new rotation</returns>
         public static quaternion RotateAroundQuaternion(quaternion rotationQuaternion, Vector3 position)
         {
+            // Debug.Log($"quaternion: {rotationQuaternion}");
+            // Debug.Log($"position: {position}");
             quaternion positionQuaternion = new quaternion(position.x, position.y, position.z, 0f);
             quaternion inverseQuaternion = InverseQuaternion(rotationQuaternion);
             quaternion rotatedQuaternion = MultiplyQuaternion(MultiplyQuaternion(rotationQuaternion, positionQuaternion), inverseQuaternion);
