@@ -71,17 +71,17 @@ public static class QuaternionUtils
     }
 
     // Rotate a Vector3 v by quaternion q using p' = q * p * q_conj
-    public static Vector3 RotatePosition(Quaternion q, Vector3 v)
+    public static Vector3 RotatePosition(Quaternion quat, Vector3 position)
     {
         // Ensure q is normalized (to avoid scaling)
-        q = Normalize(q);
+        quat = Normalize(quat);
 
         // p as pure quaternion
-        Quaternion p = new Quaternion(v.x, v.y, v.z, 0f);
+        Quaternion p = new Quaternion(position.x, position.y, position.z, 0f);
         
-        Quaternion qp = MultiplyQuaternion(q, p);
-        Quaternion qConj = ConjugateQuaternion(q);
-        Quaternion res = MultiplyQuaternion(qp, qConj);
+        Quaternion qp = MultiplyQuaternion(quat, p);
+        Quaternion inverse = InverseQuaternion(ConjugateQuaternion(quat));
+        Quaternion res = MultiplyQuaternion(qp, inverse);
 
         return new Vector3(res.x, res.y, res.z);
     }
