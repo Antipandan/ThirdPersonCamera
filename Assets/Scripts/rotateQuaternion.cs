@@ -26,7 +26,7 @@ public class rotateQuaternion : MonoBehaviour
     {
         Vector3 rotationVector = new Vector3(1f, 0f, 0f).normalized;
         Quaternion rotationQuaternion = QuaternionUtils.AxisAngleQuaternion(rotationVector, angle);
-        Vector3 rotated = QuaternionUtils.RotateVector(rotationQuaternion, startingPosition);
+        Vector3 rotated = QuaternionUtils.RotatePosition(rotationQuaternion, startingPosition);
         Debug.Log($"rotated: {rotated}");
         startingPosition = rotated;
         gameObject.transform.position = startingPosition;
@@ -64,32 +64,42 @@ public static class QuaternionUtils
         return new Quaternion(-quat.x, -quat.y, -quat.z, quat.w);
     }
 
+    public static Quaternion InverseQuaternion(Quaternion quat)
+    {
+        float magnitude = GetMagnitudeQuaternion(quat);
+        return new Quaternion(quat.x / magnitude, quat.y / magnitude, quat.z / magnitude, quat.w / magnitude);
+    }
+
     // Rotate a Vector3 v by quaternion q using p' = q * p * q_conj
-    public static Vector3 RotateVector(Quaternion q, Vector3 v)
+    public static Vector3 RotatePosition(Quaternion q, Vector3 v)
     {
         // Ensure q is normalized (to avoid scaling)
         q = Normalize(q);
 
         // p as pure quaternion
         Quaternion p = new Quaternion(v.x, v.y, v.z, 0f);
-
-        // q * p
+        
         Quaternion qp = MultiplyQuaternion(q, p);
-        // qp * q_conj
         Quaternion qConj = ConjugateQuaternion(q);
         Quaternion res = MultiplyQuaternion(qp, qConj);
 
         return new Vector3(res.x, res.y, res.z);
     }
 
-    // Normalize quaternion
-    public static Quaternion Normalize(Quaternion q)
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static float GetMagnitudeQuaternion(Quaternion quat)
     {
-        float mag = Mathf.Sqrt(q.x * q.x + q.y * q.y + q.z * q.z + q.w * q.w);
-        if (mag > 1e-6f)
+        return Mathf.Sqrt(quat.x * quat.x + quat.y * quat.y + quat.z * quat.z + quat.w * quat.w);
+    }
+
+    // Normalize quaternion
+    public static Quaternion Normalize(Quaternion quat)
+    {
+        float mag = GetMagnitudeQuaternion(quat);
+        if (mag > 1-6f) // 0.000001 tror jag
         {
             float inv = 1f / mag;
-            return new Quaternion(q.x * inv, q.y * inv, q.z * inv, q.w * inv);
+            return new Quaternion(quat.x * inv, quat.y * inv, quat.z * inv, quat.w * inv);
         }
         return new Quaternion(0f, 0f, 0f, 1f);
     }
