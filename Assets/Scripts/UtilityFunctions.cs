@@ -226,7 +226,6 @@ namespace Utility
             return new Quaternion(-quat.x, -quat.y, -quat.z, quat.w);
         }
         
-
         /// <summary>
         /// Calculate the Magnitude of a quaternion. see https://gamemath.com/book/orient.html#quaternion_magnitude
         /// equation 8.4

@@ -25,6 +25,7 @@ public class MouseLookController : MonoBehaviour, IPauseable
     private bool isPaused;
     private VectorRenderer vectorRenderer;
     private Vector3 currentMouseLookingDirection;
+    private Vector3 objectLookAroundPosition;
     
     
     public bool IsPaused => isPaused;
@@ -62,11 +63,14 @@ public class MouseLookController : MonoBehaviour, IPauseable
     {
         Vector2 look = lookAction.ReadValue<Vector2>() * (Time.deltaTime * 100f);
         look = UtilityFunctions.NormalizeVector(look);
-        currentMouseLookingDirection = new Vector3(look.x, look.y, 0f) * mouseSpeed;
+        currentMouseLookingDirection = new Vector3(-look.y * mouseSpeed, 0f, 0f);
         float rotationAmount = UtilityFunctions.GetMagnitudeOfVector(look);
-        Quaternion rotationQuaternion = UtilityFunctions.AxisAngleQuaternion(currentMouseLookingDirection, rotationAmount);
-        Vector3 newPosition = UtilityFunctions.RotatePosition(rotationQuaternion, gameObject.transform.position);
-        gameObject.transform.position = newPosition;
+        Quaternion yRotationQuaternion = UtilityFunctions.AxisAngleQuaternion(currentMouseLookingDirection, rotationAmount);
+        currentMouseLookingDirection = new Vector3(0f, -look.x * mouseSpeed, 0f);
+        Quaternion xRotationQuaternion = UtilityFunctions.AxisAngleQuaternion(currentMouseLookingDirection, rotationAmount);
+        Quaternion combinedRotationQuaternion = UtilityFunctions.MultiplyQuaternion(xRotationQuaternion, yRotationQuaternion);
+        Vector3 newPosition = UtilityFunctions.RotatePosition(combinedRotationQuaternion, gameObject.transform.position - objectToRotateAround.transform.position);
+        gameObject.transform.position = newPosition + objectToRotateAround.transform.position;
     }
     
     
