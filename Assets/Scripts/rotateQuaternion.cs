@@ -25,7 +25,7 @@ public class rotateQuaternion : MonoBehaviour
     void Update()
     {
         Vector3 rotationVector = new Vector3(1f, 0f, 0f).normalized;
-        Quaternion rotationQuaternion = QuaternionUtils.CreateFromAxisAngle(rotationVector, angle);
+        Quaternion rotationQuaternion = QuaternionUtils.AxisAngleQuaternion(rotationVector, angle);
         Vector3 rotated = QuaternionUtils.RotateVector(rotationQuaternion, startingPosition);
         Debug.Log($"rotated: {rotated}");
         startingPosition = rotated;
@@ -38,7 +38,7 @@ public class rotateQuaternion : MonoBehaviour
 public static class QuaternionUtils
 {
     // Build a unit quaternion from axis (assumed non-zero) and angle in degrees
-    public static Quaternion CreateFromAxisAngle(Vector3 axis, float angleDegrees)
+    public static Quaternion AxisAngleQuaternion(Vector3 axis, float angleDegrees)
     {
         float angleRad = angleDegrees * Mathf.Deg2Rad * 0.5f;
         axis = axis.normalized;
@@ -49,7 +49,7 @@ public static class QuaternionUtils
     }
 
     // Hamilton product: result = a * b
-    public static Quaternion Multiply(Quaternion q1, Quaternion q2)
+    public static Quaternion MultiplyQuaternion(Quaternion q1, Quaternion q2)
     {
         Vector3 v1 = new Vector3(q1.x, q1.y, q1.z);
         Vector3 v2 = new Vector3(q2.x, q2.y, q2.z);
@@ -59,7 +59,7 @@ public static class QuaternionUtils
     }
 
     // Conjugate (for unit quaternions inverse = conjugate)
-    public static Quaternion Conjugate(Quaternion quat)
+    public static Quaternion ConjugateQuaternion(Quaternion quat)
     {
         return new Quaternion(-quat.x, -quat.y, -quat.z, quat.w);
     }
@@ -74,10 +74,10 @@ public static class QuaternionUtils
         Quaternion p = new Quaternion(v.x, v.y, v.z, 0f);
 
         // q * p
-        Quaternion qp = Multiply(q, p);
+        Quaternion qp = MultiplyQuaternion(q, p);
         // qp * q_conj
-        Quaternion qConj = Conjugate(q);
-        Quaternion res = Multiply(qp, qConj);
+        Quaternion qConj = ConjugateQuaternion(q);
+        Quaternion res = MultiplyQuaternion(qp, qConj);
 
         return new Vector3(res.x, res.y, res.z);
     }
