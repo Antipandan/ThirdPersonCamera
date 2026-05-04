@@ -195,15 +195,28 @@ namespace Utility
                 sinusValue * unitVector.z,
                 Mathf.Cos(angle / 2f * Mathf.Deg2Rad));
         }
+        /// <summary>
+        /// Constructs a quaternion to rotate about given a normalized angle axis
+        /// and number of degrees to rotate around said axis
+        /// </summary>
+        /// <param name="axis">Axis to rotate around. Needs to be normalized to produce correct result</param>
+        /// <param name="angle">Number of degrees to rotate around said axis</param>
+        /// <returns>Quaternion to rotate around</returns>
         
-        public static Quaternion AxisAngleQuaternion(Vector3 axis, float angleDegrees)
+        public static Quaternion AxisAngleQuaternion(Vector3 axis, float angle)
         {
-            float angleRad = angleDegrees * Mathf.Deg2Rad * 0.5f;
-            float sinusValue = Mathf.Sin(angleRad);
-            float cosinusValue = Mathf.Cos(angleRad);
+            float sinusValue = Mathf.Sin((angle / 2f) * Mathf.Deg2Rad);
+            float cosinusValue = Mathf.Cos((angle / 2f) * Mathf.Deg2Rad);
             return new Quaternion(axis.x * sinusValue, axis.y * sinusValue, axis.z * sinusValue, cosinusValue);
         }
         
+        /// <summary>
+        /// Rotates an object about a Quaternion. Inorder to rotate around a
+        /// given pivot point follow formula (position - position_pivot_point). After rotation (new_position + pivot_point)
+        /// </summary>
+        /// <param name="rotationQuaternion"></param>
+        /// <param name="position"></param>
+        /// <returns></returns>
         public static Vector3 RotatePosition(Quaternion rotationQuaternion, Vector3 position)
         {
             Quaternion quatPosition = new Quaternion(position.x, position.y, position.z, 0f);
@@ -249,7 +262,6 @@ namespace Utility
         {
             float magnitude = GetMagnitudeQuaternion(quat);
             Quaternion conjugateQuaternion = ConjugateQuaternion(quat);
-            if (magnitude == 0f || Mathf.Approximately(magnitude, 1f)) return conjugateQuaternion;
             return new Quaternion(
                 conjugateQuaternion.x / magnitude,
                 conjugateQuaternion.y / magnitude,
@@ -270,8 +282,8 @@ namespace Utility
         {
             Vector3 v1 = new Vector3(q1.x, q1.y, q1.z);
             Vector3 v2 = new Vector3(q2.x, q2.y, q2.z);
-            Vector3 newVector = q1.w * v2 + q2.w * v1 + CrossProduct(v1, v2);
-            float w = q1.w * q2.w - DotProduct(v1, v2);
+            Vector3 newVector = q1.w * v2 + q2.w * v1 + Vector3.Cross(v1, v2);
+            float w = q1.w * q2.w - Vector3.Dot(v1, v2);
             return new Quaternion(newVector.x, newVector.y, newVector.z, w);
         }
 
@@ -287,7 +299,7 @@ namespace Utility
             float x = quat.value.x, y = quat.value.y, z = quat.value.z, w = quat.value.w;
             float pitch = Mathf.Asin(-2 * (y * z - w * x));
             float heading = pitch != 0f ? Mathf.Atan2(x * z + w * y, (-(x * x) - (y * y)) / 2f) : Mathf.Atan2(-x * z + w * y, (-(y*y) - (z*z)) / 2f);
-            // om man behöver pitch så läggs den till här!
+            // om man behöver bank så läggs den till här!
             float bank = pitch != 0f ? 0f : 0f;
             return new Vector3(heading, pitch, bank) * Mathf.Rad2Deg;
         }
@@ -301,5 +313,7 @@ namespace Utility
         {
             eulerAngles = new Vector3((eulerAngles.x + 360f) % 360f, (eulerAngles.y + 360f) % 360f, (eulerAngles.z + 360f) % 360f);
         }
+        
+        
     }
 }

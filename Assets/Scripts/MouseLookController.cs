@@ -20,12 +20,15 @@ public class MouseLookController : MonoBehaviour, IPauseable
     [SerializeField]
     private Vector2 defaultLookingDirection = new Vector2(1f, 1f);
     
-    private float rotationAngle;
     private InputAction lookAction;
     private bool isPaused;
     private VectorRenderer vectorRenderer;
     private Vector3 currentMouseLookingDirection;
     private Vector3 objectLookAroundPosition;
+    private float totalPitchRotation = 0f;
+    private float totalHeadingRotation = 0f;
+    private Vector3 startingPosition;
+    private Vector3 lastCameraRotation;
     
     
     public bool IsPaused => isPaused;
@@ -40,6 +43,7 @@ public class MouseLookController : MonoBehaviour, IPauseable
         lookAction = InputSystem.actions.FindAction("Look");
         if (objectToRotateAround != null) objectLookAroundPosition = objectToRotateAround.position;
         else objectLookAroundPosition = new Vector3(0f, 0f, 0f);
+        startingPosition = gameObject.transform.position;
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -57,22 +61,25 @@ public class MouseLookController : MonoBehaviour, IPauseable
 
         using (vectorRenderer.Begin())
         {
-            vectorRenderer.Draw(objectLookAroundPosition, objectLookAroundPosition + currentMouseLookingDirection, Color.yellow);
+            // vectorRenderer.Draw(objectLookAroundPosition, objectLookAroundPosition + currentMouseLookingDirection, Color.yellow);
         }
     }
 
     private void MouseLook()
     {
         Vector2 look = lookAction.ReadValue<Vector2>() * (Time.deltaTime * 100f);
+        float rotationAmount = UtilityFunctions.GetMagnitudeOfVector(look);
+        float headingRotation = look.x;
+        float pitchRotation = look.y;
         look = UtilityFunctions.NormalizeVector(look);
         currentMouseLookingDirection = new Vector3(-look.y * mouseSpeed, 0f, 0f);
-        float rotationAmount = UtilityFunctions.GetMagnitudeOfVector(look);
-        Quaternion yRotationQuaternion = UtilityFunctions.AxisAngleQuaternion(currentMouseLookingDirection, rotationAmount);
+        Quaternion yRotationQuaternion = UtilityFunctions.AxisAngleQuaternion(currentMouseLookingDirection, pitchRotation);
         currentMouseLookingDirection = new Vector3(0f, -look.x * mouseSpeed, 0f);
-        Quaternion xRotationQuaternion = UtilityFunctions.AxisAngleQuaternion(currentMouseLookingDirection, rotationAmount);
-        // Quaternion combinedRotationQuaternion = UtilityFunctions.MultiplyQuaternion(yRotationQuaternion, xRotationQuaternion);
-        Vector3 newPosition = UtilityFunctions.RotatePosition(xRotationQuaternion, gameObject.transform.position);
-        gameObject.transform.position = newPosition;
+        Debug.Log($"heading rotation: {headingRotation}");
+        Quaternion xRotationQuaternion = UtilityFunctions.AxisAngleQuaternion(currentMouseLookingDirection, headingRotation);
+        Quaternion combinedRotationQuaternion = UtilityFunctions.MultiplyQuaternion(xRotationQuaternion, yRotationQuaternion);
+        Vector3 newPosition = UtilityFunctions.RotatePosition(xRotationQuaternion, gameObject.transform.position - objectLookAroundPosition);
+        gameObject.transform.position = newPosition + objectLookAroundPosition;
     }
     
     
