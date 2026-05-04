@@ -15,8 +15,7 @@ namespace Utility
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static int GetSign(float number)
         {
-            int integer = BitConverter.SingleToInt32Bits(number);
-            return ((integer >> 31) * 2) + 1;
+            return (((int) number >> 31) * 2) + 1;
         }
         
         // tagen från https://learn.microsoft.com/en-us/dotnet/csharp/language-reference/operators/sizeof
@@ -27,7 +26,7 @@ namespace Utility
         /// <typeparam name="T">the type to get the sizeof</typeparam>
         public static unsafe void DisplaySizeOf<T>() where T : unmanaged
         {
-            Console.WriteLine($"Size of {typeof(T)} is {sizeof(T)} bytes");
+            Debug.Log($"Size of {typeof(T)} is {sizeof(T)} bytes");
         }
 
         /// <summary>
