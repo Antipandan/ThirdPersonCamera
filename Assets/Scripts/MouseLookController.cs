@@ -38,6 +38,8 @@ public class MouseLookController : MonoBehaviour, IPauseable
     private void Awake()
     {
         lookAction = InputSystem.actions.FindAction("Look");
+        if (objectToRotateAround != null) objectLookAroundPosition = objectToRotateAround.position;
+        else objectLookAroundPosition = new Vector3(0f, 0f, 0f);
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -55,7 +57,7 @@ public class MouseLookController : MonoBehaviour, IPauseable
 
         using (vectorRenderer.Begin())
         {
-            vectorRenderer.Draw(objectToRotateAround.position, objectToRotateAround.position + currentMouseLookingDirection, Color.yellow);
+            vectorRenderer.Draw(objectLookAroundPosition, objectLookAroundPosition + currentMouseLookingDirection, Color.yellow);
         }
     }
 
@@ -68,9 +70,9 @@ public class MouseLookController : MonoBehaviour, IPauseable
         Quaternion yRotationQuaternion = UtilityFunctions.AxisAngleQuaternion(currentMouseLookingDirection, rotationAmount);
         currentMouseLookingDirection = new Vector3(0f, -look.x * mouseSpeed, 0f);
         Quaternion xRotationQuaternion = UtilityFunctions.AxisAngleQuaternion(currentMouseLookingDirection, rotationAmount);
-        Quaternion combinedRotationQuaternion = UtilityFunctions.MultiplyQuaternion(xRotationQuaternion, yRotationQuaternion);
-        Vector3 newPosition = UtilityFunctions.RotatePosition(combinedRotationQuaternion, gameObject.transform.position - objectToRotateAround.transform.position);
-        gameObject.transform.position = newPosition + objectToRotateAround.transform.position;
+        // Quaternion combinedRotationQuaternion = UtilityFunctions.MultiplyQuaternion(yRotationQuaternion, xRotationQuaternion);
+        Vector3 newPosition = UtilityFunctions.RotatePosition(xRotationQuaternion, gameObject.transform.position);
+        gameObject.transform.position = newPosition;
     }
     
     

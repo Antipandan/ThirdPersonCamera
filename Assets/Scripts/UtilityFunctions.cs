@@ -199,10 +199,9 @@ namespace Utility
         public static Quaternion AxisAngleQuaternion(Vector3 axis, float angleDegrees)
         {
             float angleRad = angleDegrees * Mathf.Deg2Rad * 0.5f;
-            axis = axis.normalized;
-            float s = Mathf.Sin(angleRad);
-            float c = Mathf.Cos(angleRad);
-            return new Quaternion(axis.x * s, axis.y * s, axis.z * s, c);
+            float sinusValue = Mathf.Sin(angleRad);
+            float cosinusValue = Mathf.Cos(angleRad);
+            return new Quaternion(axis.x * sinusValue, axis.y * sinusValue, axis.z * sinusValue, cosinusValue);
         }
         
         public static Vector3 RotatePosition(Quaternion rotationQuaternion, Vector3 position)
