@@ -195,13 +195,20 @@ namespace Utility
                 sinusValue * unitVector.z,
                 Mathf.Cos(angle / 2f * Mathf.Deg2Rad));
         }
+
+        public static Quaternion NormalizeQuaternion(Quaternion quat)
+        {
+            float magnitude = GetMagnitudeQuaternion(quat);
+            return new Quaternion(quat.x / magnitude, quat.y / magnitude, quat.z / magnitude, quat.w);
+        }
         
         public static Quaternion AxisAngleQuaternion(Vector3 axis, float angleDegrees)
         {
             float angleRad = angleDegrees * Mathf.Deg2Rad * 0.5f;
             float sinusValue = Mathf.Sin(angleRad);
             float cosinusValue = Mathf.Cos(angleRad);
-            return new Quaternion(axis.x * sinusValue, axis.y * sinusValue, axis.z * sinusValue, cosinusValue);
+            // ifall quaternion inte är normaliserad så orsakar det att kameran aliaser och närmar sig pivot vid vissa heading och pitch vinklar????
+            return new Quaternion(axis.x * sinusValue, axis.y * sinusValue, axis.z * sinusValue, cosinusValue).normalized;
         }
         
         public static Vector3 RotatePosition(Quaternion rotationQuaternion, Vector3 position)
