@@ -63,15 +63,13 @@ public class MouseLookController : MonoBehaviour, IPauseable
 
     private void MouseLook()
     {
-        Vector2 look = lookAction.ReadValue<Vector2>() * (Time.deltaTime * 100f);
+        Vector2 look = lookAction.ReadValue<Vector2>() * (Time.deltaTime * 100f * mouseSpeed);
         float rotationAmount = UtilityFunctions.GetMagnitudeOfVector(look);
-        float headingRotation = Mathf.Sqrt(rotationAmount * rotationAmount + look.y * look.y);
-        float pitchRotation = Mathf.Sqrt(rotationAmount * rotationAmount + look.x * look.x);
-        look = UtilityFunctions.NormalizeVector(look);
-        currentMouseLookingDirection = new Vector3(look.y * mouseSpeed, 0f, 0f);
-        Quaternion yRotationQuaternion = UtilityFunctions.AxisAngleQuaternion(currentMouseLookingDirection, pitchRotation);
-        currentMouseLookingDirection = new Vector3(0f, look.x * mouseSpeed, 0f);
-        Quaternion xRotationQuaternion = UtilityFunctions.AxisAngleQuaternion(currentMouseLookingDirection, headingRotation);
+        Vector2 normalizedLook = UtilityFunctions.NormalizeVector(look);
+        currentMouseLookingDirection = new Vector3(normalizedLook.y, 0f, 0f);
+        Quaternion yRotationQuaternion = UtilityFunctions.AxisAngleQuaternion(currentMouseLookingDirection, rotationAmount);
+        currentMouseLookingDirection = new Vector3(0f, normalizedLook.x, 0f);
+        Quaternion xRotationQuaternion = UtilityFunctions.AxisAngleQuaternion(currentMouseLookingDirection, rotationAmount);
         Quaternion combinedRotationQuaternion = UtilityFunctions.MultiplyQuaternion(yRotationQuaternion, xRotationQuaternion);
         Vector3 newPosition = UtilityFunctions.RotatePosition(combinedRotationQuaternion, gameObject.transform.position);
         gameObject.transform.position = newPosition;
