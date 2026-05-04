@@ -64,14 +64,16 @@ public class MouseLookController : MonoBehaviour, IPauseable
     private void MouseLook()
     {
         Vector2 look = lookAction.ReadValue<Vector2>() * (Time.deltaTime * 100f);
+        float rotationAmount = UtilityFunctions.GetMagnitudeOfVector(look);
+        float headingRotation = look.x;
+        float pitchRotation = look.y;
         look = UtilityFunctions.NormalizeVector(look);
         currentMouseLookingDirection = new Vector3(-look.y * mouseSpeed, 0f, 0f);
-        float rotationAmount = UtilityFunctions.GetMagnitudeOfVector(look);
-        Quaternion yRotationQuaternion = UtilityFunctions.AxisAngleQuaternion(currentMouseLookingDirection, rotationAmount);
+        Quaternion yRotationQuaternion = UtilityFunctions.AxisAngleQuaternion(currentMouseLookingDirection, pitchRotation);
         currentMouseLookingDirection = new Vector3(0f, -look.x * mouseSpeed, 0f);
-        Quaternion xRotationQuaternion = UtilityFunctions.AxisAngleQuaternion(currentMouseLookingDirection, rotationAmount);
-        // Quaternion combinedRotationQuaternion = UtilityFunctions.MultiplyQuaternion(yRotationQuaternion, xRotationQuaternion);
-        Vector3 newPosition = UtilityFunctions.RotatePosition(xRotationQuaternion, gameObject.transform.position);
+        Quaternion xRotationQuaternion = UtilityFunctions.AxisAngleQuaternion(currentMouseLookingDirection, headingRotation);
+        Quaternion combinedRotationQuaternion = UtilityFunctions.MultiplyQuaternion(yRotationQuaternion, xRotationQuaternion);
+        Vector3 newPosition = UtilityFunctions.RotatePosition(combinedRotationQuaternion, gameObject.transform.position);
         gameObject.transform.position = newPosition;
     }
     
