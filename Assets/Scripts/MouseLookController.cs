@@ -75,12 +75,17 @@ public class MouseLookController : MonoBehaviour, IPauseable
         currentMouseLookingDirection = new Vector3(-look.y * mouseSpeed, 0f, 0f);
         Quaternion yRotationQuaternion = UtilityFunctions.AxisAngleQuaternion(currentMouseLookingDirection, pitchRotation);
         currentMouseLookingDirection = new Vector3(0f, -look.x * mouseSpeed, 0f);
+<<<<<<< Updated upstream
         Debug.Log($"heading rotation: {headingRotation}");
         Quaternion xRotationQuaternion = UtilityFunctions.AxisAngleQuaternion(currentMouseLookingDirection, headingRotation);
         Quaternion combinedRotationQuaternion = UtilityFunctions.MultiplyQuaternion(xRotationQuaternion, yRotationQuaternion);
         Vector3 newPosition = UtilityFunctions.RotatePosition(xRotationQuaternion, gameObject.transform.position - objectLookAroundPosition);
         gameObject.transform.position = newPosition + objectLookAroundPosition;
+=======
+        Quaternion xRotationQuaternion = UtilityFunctions.AxisAngleQuaternion(currentMouseLookingDirection, headingRotation);
+        Quaternion combinedRotationQuaternion = UtilityFunctions.MultiplyQuaternion(yRotationQuaternion, xRotationQuaternion);
+        Vector3 newPosition = UtilityFunctions.RotatePosition(combinedRotationQuaternion, gameObject.transform.position);
+        gameObject.transform.position = newPosition;
+>>>>>>> Stashed changes
     }
-    
-    
 }
