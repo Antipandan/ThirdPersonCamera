@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Runtime.CompilerServices;
 using Unity.Mathematics;
+using static Unity.Mathematics.math;
 using UnityEngine;
 
 namespace Utility
@@ -300,10 +301,19 @@ namespace Utility
         
         public static Quaternion ConvertEulerToQuaternion(Vector3 euler)
         {
-            Quaternion heading = new Quaternion(0f, Mathf.Sin(euler.x) * Mathf.Deg2Rad / 2f, 0f, Mathf.Cos(euler.x) * Mathf.Deg2Rad / 2f);
+            float heading = euler.x * Mathf.Deg2Rad;
+            float pitch = euler.y *  Mathf.Deg2Rad;
+            float bank = euler.z * Mathf.Deg2Rad;
+            /*
+             Quaternion heading = new Quaternion(0f, Mathf.Sin(euler.x) * Mathf.Deg2Rad / 2f, 0f, Mathf.Cos(euler.x) * Mathf.Deg2Rad / 2f);
             Quaternion pitch = new Quaternion(Mathf.Sin(euler.y) * Mathf.Deg2Rad / 2f, 0f, 0f, Mathf.Cos(euler.y) * Mathf.Deg2Rad / 2f);
             Quaternion bank = new Quaternion(0f, 0f, Mathf.Sin(euler.z) * Mathf.Deg2Rad / 2f, Mathf.Cos(euler.z) * Mathf.Deg2Rad / 2f);
-            return MultiplyQuaternion(MultiplyQuaternion(heading, pitch), bank).normalized;
+             */
+            return new Quaternion(
+                cos(heading / 2f) * sin(pitch / 2f) * cos(bank / 2f) + sin(heading / 2f) * cos(pitch / 2f) * sin(bank / 2f),
+                sin(heading / 2f) * cos(pitch / 2f) * cos(bank / 2f) - cos(heading / 2f) * sin(pitch / 2f) * sin(bank / 2f),
+                cos(heading / 2f) * cos(pitch / 2f) * sin(bank / 2f) - sin(heading / 2f) * sin(pitch / 2f) * cos(bank / 2f), 
+                cos(heading / 2f) * cos(pitch / 2f) * cos(bank / 2f) + sin(heading / 2f) * sin(bank / 2f) * sin(bank / 2f));
         }
         /// <summary>
         /// remove reoccuring values for trigonometric functions by performing

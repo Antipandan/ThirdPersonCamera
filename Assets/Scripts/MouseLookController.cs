@@ -85,13 +85,12 @@ public class MouseLookController : MonoBehaviour, IPauseable
     {
         pitch = Mathf.Clamp(pitch, -0.5f * maxPitch + tolerance, 0.5f * maxPitch - tolerance);
         heading = Mathf.Clamp(heading, -0.5f * maxHeading + tolerance, 0.5f * maxHeading - tolerance);
-        Debug.Log($"heading: {heading}, pitch: {pitch}");
     }
 
     private void UpdateRotationAngles(Vector2 mouseVector)
     {
-        pitch -= mouseVector.x;
-        heading += mouseVector.y;
+        pitch -= mouseVector.y;
+        heading += mouseVector.x;
         UpdateRotationAngles();
     }
     
