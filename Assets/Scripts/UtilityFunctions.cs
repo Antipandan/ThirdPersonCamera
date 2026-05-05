@@ -297,6 +297,14 @@ namespace Utility
             float bank = pitch != 0f ? 0f : 0f;
             return new Vector3(heading, pitch, bank) * Mathf.Rad2Deg;
         }
+        
+        public static Quaternion ConvertEulerToQuaternion(Vector3 euler)
+        {
+            Quaternion heading = new Quaternion(0f, Mathf.Sin(euler.x) * Mathf.Deg2Rad / 2f, 0f, Mathf.Cos(euler.x) * Mathf.Deg2Rad / 2f);
+            Quaternion pitch = new Quaternion(Mathf.Sin(euler.y) * Mathf.Deg2Rad / 2f, 0f, 0f, Mathf.Cos(euler.y) * Mathf.Deg2Rad / 2f);
+            Quaternion bank = new Quaternion(0f, 0f, Mathf.Sin(euler.z) * Mathf.Deg2Rad / 2f, Mathf.Cos(euler.z) * Mathf.Deg2Rad / 2f);
+            return MultiplyQuaternion(MultiplyQuaternion(heading, pitch), bank).normalized;
+        }
         /// <summary>
         /// remove reoccuring values for trigonometric functions by performing
         /// a modulus operation to bring back down values exceeding 360 degrees
@@ -307,5 +315,7 @@ namespace Utility
         {
             eulerAngles = new Vector3((eulerAngles.x + 360f) % 360f, (eulerAngles.y + 360f) % 360f, (eulerAngles.z + 360f) % 360f);
         }
+
+
     }
 }

@@ -16,14 +16,10 @@ public class MouseLookController : MonoBehaviour, IPauseable
     
     [SerializeField]
     private float mouseSpeed = 1.0f;
-    
-    [SerializeField]
-    private Vector2 defaultLookingDirection = new Vector2(1f, 1f);
 
     [SerializeField] [Range(0f, 90f)] private float maxPitch = 80f;
     [SerializeField] [Range(0f, 180f)] private float maxHeading = 90f;
     
-    private float rotationAngle;
     private InputAction lookAction;
     private bool isPaused;
     private VectorRenderer vectorRenderer;
@@ -32,6 +28,7 @@ public class MouseLookController : MonoBehaviour, IPauseable
     private float pitch;
     private float heading;
     private Vector3 startingPosition;
+    private const float tolerance = 1e-6f;
     
     
     public bool IsPaused => isPaused;
@@ -71,21 +68,23 @@ public class MouseLookController : MonoBehaviour, IPauseable
     private void MouseLook()
     {
         Vector2 look = lookAction.ReadValue<Vector2>() * (Time.deltaTime * mouseSpeed * 10f);
-        float rotationAmount = UtilityFunctions.GetMagnitudeOfVector(look);
-        UpdateRotationAngles(look);
-        Vector2 normalizedLook = UtilityFunctions.NormalizeVector(look);
-        currentMouseLookingDirection = new Vector3(0f, -normalizedLook.x, normalizedLook.y);
-        // Quaternion xRotationQuaternion = UtilityFunctions.AxisAngleQuaternion(currentMouseLookingDirection, rotationAmount);
-        Quaternion rotation = Quaternion.Euler(heading, pitch, 0f);
-        Vector3 newPosition = UtilityFunctions.RotatePosition(rotation, startingPosition - objectLookAroundPosition);
-        // gameObject.transform.rotation = rotation;
-        gameObject.transform.position = newPosition + objectLookAroundPosition;
+        if (look != Vector2.zero)
+        {
+            UpdateRotationAngles(look);
+            Vector2 normalizedLook = UtilityFunctions.NormalizeVector(look);
+            currentMouseLookingDirection = new Vector3(normalizedLook.y, -normalizedLook.x, 0f);
+            Quaternion rotation = UtilityFunctions.ConvertEulerToQuaternion(new Vector3(heading, pitch, 0f));
+            Vector3 newPosition = UtilityFunctions.RotatePosition(rotation, startingPosition - objectLookAroundPosition);
+            gameObject.transform.position = newPosition + objectLookAroundPosition;
+            // jag tänker inte lista ut det här själv ok!
+            gameObject.transform.rotation = rotation;
+        }
     }
 
     private void UpdateRotationAngles()
     {
-        pitch = Mathf.Clamp(pitch, -0.5f * maxPitch, 0.5f * maxPitch);
-        heading = Mathf.Clamp(heading, -0.5f * maxHeading, 0.5f * maxHeading);
+        pitch = Mathf.Clamp(pitch, -0.5f * maxPitch + tolerance, 0.5f * maxPitch - tolerance);
+        heading = Mathf.Clamp(heading, -0.5f * maxHeading + tolerance, 0.5f * maxHeading - tolerance);
         Debug.Log($"heading: {heading}, pitch: {pitch}");
     }
 
