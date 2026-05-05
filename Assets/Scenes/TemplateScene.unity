@@ -16923,8 +16923,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   objectToRotateAround: {fileID: 1522075679}
-  mouseSpeed: 1
-  defaultLookingDirection: {x: 1, y: 1}
+  mouseSpeed: 3
+  allowLimitLessPitch: 0
+  maxPitch: 80
+  allowLimitLessHeading: 0
+  maxHeading: 160
+  rotateObject: 1
 --- !u!114 &1498205444
 MonoBehaviour:
   m_ObjectHideFlags: 0

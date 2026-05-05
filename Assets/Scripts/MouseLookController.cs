@@ -1,10 +1,8 @@
 using System;
 using System.Runtime.CompilerServices;
 using DefaultNamespace;
-using Unity.Mathematics;
 using UnityEngine;
 using UnityEngine.InputSystem;
-using UnityEngine.TextCore.Text;
 using Utility;
 using Vectors;
 
@@ -17,18 +15,23 @@ public class MouseLookController : MonoBehaviour, IPauseable
     [SerializeField]
     private float mouseSpeed = 1.0f;
 
+    [SerializeField] private bool allowLimitLessPitch = false;
     [SerializeField] [Range(0f, 90f)] private float maxPitch = 80f;
+    [SerializeField] private bool allowLimitLessHeading = false;
     [SerializeField] [Range(0f, 180f)] private float maxHeading = 90f;
+
+    [Header("Additional options")] 
+    [SerializeField] private bool rotateObject = true;
     
-    private InputAction lookAction;
-    private bool isPaused;
-    private VectorRenderer vectorRenderer;
     private Vector3 currentMouseLookingDirection;
     private Vector3 objectLookAroundPosition;
-    private float pitch;
-    private float heading;
-    private Vector3 startingPosition;
+    private VectorRenderer vectorRenderer;
     private const float tolerance = 1e-6f;
+    private Vector3 startingPosition;
+    private InputAction lookAction;
+    private bool isPaused;
+    private float heading;
+    private float pitch;
     
     
     public bool IsPaused => isPaused;
@@ -77,21 +80,20 @@ public class MouseLookController : MonoBehaviour, IPauseable
             Vector3 newPosition = UtilityFunctions.RotatePosition(rotation, startingPosition - objectLookAroundPosition);
             gameObject.transform.position = newPosition + objectLookAroundPosition;
             // jag tänker inte lista ut det här själv ok!
-            gameObject.transform.rotation = rotation;
+            if (rotateObject) gameObject.transform.rotation = rotation;
         }
+    }
+    
+    private void UpdateRotationAngles(Vector2 mouseVector)
+    {
+        heading += mouseVector.x;
+        pitch -= mouseVector.y;
+        UpdateRotationAngles();
     }
 
     private void UpdateRotationAngles()
     {
-        pitch = Mathf.Clamp(pitch, -0.5f * maxPitch + tolerance, 0.5f * maxPitch - tolerance);
-        heading = Mathf.Clamp(heading, -0.5f * maxHeading + tolerance, 0.5f * maxHeading - tolerance);
+        if (!allowLimitLessHeading) heading = Mathf.Clamp(heading, -0.5f * maxHeading + tolerance, 0.5f * maxHeading - tolerance);
+        if (!allowLimitLessPitch) pitch = Mathf.Clamp(pitch, -0.5f * maxPitch + tolerance, 0.5f * maxPitch - tolerance);
     }
-
-    private void UpdateRotationAngles(Vector2 mouseVector)
-    {
-        pitch -= mouseVector.y;
-        heading += mouseVector.x;
-        UpdateRotationAngles();
-    }
-    
 }

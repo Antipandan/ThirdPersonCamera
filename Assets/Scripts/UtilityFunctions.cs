@@ -104,9 +104,7 @@ namespace Utility
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static float GetMagnitudeOfVector(Vector3 vector)
         {
-            // lite av en bandaid fix men så här gör vi!
-            if (vector == Vector3.zero) return 1f;
-            return Mathf.Sqrt(vector.x * vector.x + vector.y * vector.y);
+            return Mathf.Sqrt(vector.x * vector.x + vector.y * vector.y + vector.z * vector.z);
         }
 
         /// <summary>
@@ -195,13 +193,26 @@ namespace Utility
                 sinusValue * unitVector.z,
                 Mathf.Cos(angle / 2f * Mathf.Deg2Rad));
         }
-
+        
+        /// <summary>
+        /// Calculates a Quaternion with the unit lenght of 1 based on input Quaternion.
+        /// See https://gamemath.com/book/orient.html#quaternion_definition for how quaternion is composed and
+        /// https://gamemath.com/book/vectors.html#infinite_vectors_with_same_magnitude figure 2.16 to normalize a vector v
+        /// </summary>
+        /// <param name="quat">Quaternion to produce new normalized Quaternion</param>
+        /// <returns>Quaternion with unit lenght of 1</returns>
         public static Quaternion NormalizeQuaternion(Quaternion quat)
         {
             float magnitude = GetMagnitudeQuaternion(quat);
             return new Quaternion(quat.x / magnitude, quat.y / magnitude, quat.z / magnitude, quat.w);
         }
         
+        /// <summary>
+        /// Create a quaternion based on an angle and how many degrees to rotate around said angle
+        /// </summary>
+        /// <param name="axis">The axis to rotate around</param>
+        /// <param name="angleDegrees">number of degrees to rotate around said axis</param>
+        /// <returns>Quaternion used to rotate an object around the given axis and angle</returns>
         public static Quaternion AxisAngleQuaternion(Vector3 axis, float angleDegrees)
         {
             float angleRad = angleDegrees * Mathf.Deg2Rad * 0.5f;
@@ -211,11 +222,19 @@ namespace Utility
             return new Quaternion(axis.x * sinusValue, axis.y * sinusValue, axis.z * sinusValue, cosinusValue).normalized;
         }
         
+        /// <summary>
+        /// Rotate a position around a given Quaternion. Does not rotate around a custom pivot point.
+        /// Pivot point is origo in worldspace. In order to rotate around a pivot point subtract the position of the object to be rotated,
+        /// with the position of the pivot point. Add the position of the pivot point to the return value of this function
+        /// </summary>
+        /// <param name="rotationQuaternion"></param>
+        /// <param name="position"></param>
+        /// <returns></returns>
         public static Vector3 RotatePosition(Quaternion rotationQuaternion, Vector3 position)
         {
             Quaternion quatPosition = new Quaternion(position.x, position.y, position.z, 0f);
             Quaternion inverseQuaternion = InverseQuaternion(rotationQuaternion);
-            Quaternion rotatedPosition = MultiplyQuaternion(MultiplyQuaternion(rotationQuaternion, quatPosition), inverseQuaternion);
+            Quaternion rotatedPosition = FastMultiplyQuaternion(FastMultiplyQuaternion(rotationQuaternion, quatPosition), inverseQuaternion);
 
             return new Vector3(rotatedPosition.x, rotatedPosition.y, rotatedPosition.z);
         }
@@ -264,7 +283,6 @@ namespace Utility
                 conjugateQuaternion.w / magnitude);
         }
         
-        
         /// <summary>
         /// Multiply a quaternion with another. Takes two quaternions as input and returns the product of said quaternions
         /// see https://gamemath.com/book/orient.html#quaternion_cross_product for details
@@ -272,7 +290,6 @@ namespace Utility
         /// <param name="q1">First Quaternion</param>
         /// <param name="q2">Second Quaternion</param>
         /// <returns>The Hamilton product of two Quaternions</returns>
-        
         public static Quaternion MultiplyQuaternion(Quaternion q1, Quaternion q2)
         {
             Vector3 v1 = new Vector3(q1.x, q1.y, q1.z);
@@ -280,6 +297,22 @@ namespace Utility
             Vector3 newVector = q1.w * v2 + q2.w * v1 + CrossProduct(v1, v2);
             float w = q1.w * q2.w - DotProduct(v1, v2);
             return new Quaternion(newVector.x, newVector.y, newVector.z, w);
+        }
+
+        /// <summary>
+        /// Multiply a quaternion with another. Takes two quaternions as input and returns the product of said quaternions
+        /// see https://gamemath.com/book/orient.html#quaternion_cross_product for details. Assumes either
+        /// one of the w component is equal to zero. Thus, Operations requires fewer instructions
+        /// </summary>
+        /// <param name="q1">First Quaternion</param>
+        /// <param name="q2">Second Quaternion</param>
+        /// <returns>The Hamilton product of two Quaternions</returns>
+        public static Quaternion FastMultiplyQuaternion(Quaternion q1, Quaternion q2)
+        {
+            Vector3 v1 = new Vector3(q1.x, q1.y, q1.z);
+            Vector3 v2 = new Vector3(q2.x, q2.y, q2.z);
+            Vector3 newVector = q1.w * v2 + q2.w * v1 + CrossProduct(v1, v2);
+            return new Quaternion(newVector.x, newVector.y, newVector.z, 0f);
         }
 
         /// <summary>
@@ -294,38 +327,28 @@ namespace Utility
             float x = quat.value.x, y = quat.value.y, z = quat.value.z, w = quat.value.w;
             float pitch = Mathf.Asin(-2 * (y * z - w * x));
             float heading = pitch != 0f ? Mathf.Atan2(x * z + w * y, (-(x * x) - (y * y)) / 2f) : Mathf.Atan2(-x * z + w * y, (-(y*y) - (z*z)) / 2f);
-            // om man behöver pitch så läggs den till här!
+            // om man behöver bank så läggs den till här!
             float bank = pitch != 0f ? 0f : 0f;
             return new Vector3(heading, pitch, bank) * Mathf.Rad2Deg;
         }
         
+        /// <summary>
+        /// Converts EulerAngles to Quaternion. Takes a Vector3 containing
+        /// the euler angles expressed as follows: Vector3(Heading, Pitch, Bank)
+        /// </summary>
+        /// <param name="euler">Vector3(Heading, Pitch, Bank)</param>
+        /// <returns>Quaternion converted from provided Euler angle</returns>
         public static Quaternion ConvertEulerToQuaternion(Vector3 euler)
         {
             float heading = euler.x * Mathf.Deg2Rad;
             float pitch = euler.y *  Mathf.Deg2Rad;
             float bank = euler.z * Mathf.Deg2Rad;
-            /*
-             Quaternion heading = new Quaternion(0f, Mathf.Sin(euler.x) * Mathf.Deg2Rad / 2f, 0f, Mathf.Cos(euler.x) * Mathf.Deg2Rad / 2f);
-            Quaternion pitch = new Quaternion(Mathf.Sin(euler.y) * Mathf.Deg2Rad / 2f, 0f, 0f, Mathf.Cos(euler.y) * Mathf.Deg2Rad / 2f);
-            Quaternion bank = new Quaternion(0f, 0f, Mathf.Sin(euler.z) * Mathf.Deg2Rad / 2f, Mathf.Cos(euler.z) * Mathf.Deg2Rad / 2f);
-             */
             return new Quaternion(
                 cos(heading / 2f) * sin(pitch / 2f) * cos(bank / 2f) + sin(heading / 2f) * cos(pitch / 2f) * sin(bank / 2f),
                 sin(heading / 2f) * cos(pitch / 2f) * cos(bank / 2f) - cos(heading / 2f) * sin(pitch / 2f) * sin(bank / 2f),
                 cos(heading / 2f) * cos(pitch / 2f) * sin(bank / 2f) - sin(heading / 2f) * sin(pitch / 2f) * cos(bank / 2f), 
                 cos(heading / 2f) * cos(pitch / 2f) * cos(bank / 2f) + sin(heading / 2f) * sin(bank / 2f) * sin(bank / 2f));
         }
-        /// <summary>
-        /// remove reoccuring values for trigonometric functions by performing
-        /// a modulus operation to bring back down values exceeding 360 degrees
-        /// </summary>
-        /// <param name="eulerAngles">Euler angles in the form of Vector3(Heading, Pitch, Roll) note that order doesn't really matter</param>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static void OverlapAngleValues(ref Vector3 eulerAngles)
-        {
-            eulerAngles = new Vector3((eulerAngles.x + 360f) % 360f, (eulerAngles.y + 360f) % 360f, (eulerAngles.z + 360f) % 360f);
-        }
-
 
     }
 }
