@@ -25,7 +25,14 @@ namespace DefaultNamespace
 
         private void Awake()
         {
-            if (_instance == null) Destroy(this);
+            if (_instance == null)
+            {
+                _instance = this;
+            }
+            else
+            {
+                Destroy(this);
+            }
         }
 
         public void PublishOnFollowChange(bool value)
@@ -37,5 +44,6 @@ namespace DefaultNamespace
         {
             onMouseSpeedChanged?.Invoke(newMouseSpeed);
         }
+        
     }
 }

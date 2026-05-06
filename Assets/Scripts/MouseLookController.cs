@@ -46,9 +46,14 @@ public class MouseLookController : MonoBehaviour, IPauseable
     
     private void Awake()
     {
+        if (events == null)
+        {
+            Debug.LogError($"Reference to {nameof(CustomEvents)} in GameObject '{gameObject.name}'" +
+                           $" is missing in inspector. A reference is required for the game to start", gameObject);
+            throw new ArgumentNullException(nameof(events));
+        }
         lookAction = InputSystem.actions.FindAction("Look");
-        if (objectToRotateAround != null) objectLookAroundPosition = objectToRotateAround.position;
-        else objectLookAroundPosition = new Vector3(0f, 0f, 0f);
+        objectLookAroundPosition = objectToRotateAround != null ? objectToRotateAround.position : new Vector3(0f, 0f, 0f);
         startingPosition = transform.position;
     }
 
@@ -87,7 +92,7 @@ public class MouseLookController : MonoBehaviour, IPauseable
             Quaternion rotation = UtilityFunctions.ConvertEulerToQuaternion(new Vector3(heading, pitch, 0f));
             Vector3 newPosition = UtilityFunctions.RotatePosition(rotation, startingPosition - objectLookAroundPosition);
             gameObject.transform.position = newPosition + objectLookAroundPosition;
-            // jag tänker inte lista ut det här själv ok!
+            // jag tänker inte lista ut det här själv ok! 
             if (rotateObject) gameObject.transform.rotation = rotation;
         }
     }
@@ -106,7 +111,7 @@ public class MouseLookController : MonoBehaviour, IPauseable
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public void ChangeMouseSpeed(string newMouseSpeed)
+    private void ChangeMouseSpeed(string newMouseSpeed)
     {
         float.TryParse(newMouseSpeed, out mouseSpeed);
     }
