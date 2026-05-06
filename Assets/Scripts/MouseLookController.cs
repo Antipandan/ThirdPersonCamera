@@ -10,6 +10,9 @@ using Vectors;
 public class MouseLookController : MonoBehaviour, IPauseable
 {
     [SerializeField]
+    private CustomEvents events;
+    
+    [SerializeField]
     private Transform objectToRotateAround;
     
     [SerializeField]
@@ -47,6 +50,11 @@ public class MouseLookController : MonoBehaviour, IPauseable
         if (objectToRotateAround != null) objectLookAroundPosition = objectToRotateAround.position;
         else objectLookAroundPosition = new Vector3(0f, 0f, 0f);
         startingPosition = transform.position;
+    }
+
+    private void SubscribeToEvents()
+    {
+        events.OnMouseSpeedChanged += ChangeMouseSpeed;
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -95,5 +103,11 @@ public class MouseLookController : MonoBehaviour, IPauseable
     {
         if (!allowLimitLessHeading) heading = Mathf.Clamp(heading, -0.5f * maxHeading + tolerance, 0.5f * maxHeading - tolerance);
         if (!allowLimitLessPitch) pitch = Mathf.Clamp(pitch, -0.5f * maxPitch + tolerance, 0.5f * maxPitch - tolerance);
+    }
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public void ChangeMouseSpeed(string newMouseSpeed)
+    {
+        float.TryParse(newMouseSpeed, out mouseSpeed);
     }
 }

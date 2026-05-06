@@ -7,11 +7,20 @@ namespace DefaultNamespace
     {
         private static CustomEvents _instance;
         private Action<bool> onFollowChange;
+        private Action<string> onMouseSpeedChanged;
 
+        
+        // getters och setters ifall vi vill kontrollera synligheten senare!
         public Action<bool> OnFollowChange
         {
             get => onFollowChange;
             set => onFollowChange = value;
+        }
+
+        public Action<string> OnMouseSpeedChanged
+        {
+            get => onMouseSpeedChanged;
+            set => onMouseSpeedChanged = value;
         }
 
         private void Awake()
@@ -22,6 +31,11 @@ namespace DefaultNamespace
         public void PublishOnFollowChange(bool value)
         {
             onFollowChange?.Invoke(value);
+        }
+
+        public void PublishOnMouseSpeedChanged(string newMouseSpeed)
+        {
+            onMouseSpeedChanged?.Invoke(newMouseSpeed);
         }
     }
 }
