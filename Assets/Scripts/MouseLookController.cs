@@ -29,7 +29,6 @@ public class MouseLookController : MonoBehaviour, IPauseable
     [SerializeField]
     private Vector3 startingPosition;
     
-    
     private Vector3 currentMouseLookingDirection;
     private Vector3 objectLookAroundPosition;
     private VectorRenderer vectorRenderer;
@@ -57,6 +56,7 @@ public class MouseLookController : MonoBehaviour, IPauseable
         lookAction = InputSystem.actions.FindAction("Look");
         objectLookAroundPosition = objectToRotateAround != null ? objectToRotateAround.position : new Vector3(0f, 0f, 0f);
         startingPosition = transform.position;
+        Debug.Log($"awake! Starting position: {startingPosition}");
     }
 
     private void SubscribeToEvents()
@@ -121,5 +121,11 @@ public class MouseLookController : MonoBehaviour, IPauseable
     public void ChangeCameraPosition()
     {
         startingPosition = gameObject.transform.position;
+    }
+
+    private void OnValidate()
+    {
+        Debug.Log($"validate!");
+        gameObject.transform.position = startingPosition;
     }
 }

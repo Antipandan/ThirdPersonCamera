@@ -71,18 +71,6 @@ namespace Utility
             return new Vector3(v1.y*v2.z - v2.y*v1.z, v1.z*v2.x - v2.z*v1.x, v1.x*v2.y - v2.x*v1.y);
         }
         
-        /// <summary>
-        /// Modifies a Vector2 with new X and Y values. Takes a reference to an existing Vector2
-        /// </summary>
-        /// <param name="x">New X value corresponding with the vectors old X value</param>
-        /// <param name="y">New Y value corresponding with the vectors old Y value</param>
-        /// <param name="vector">Vector2 instance to be modified</param>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static void ModifyVector2(float x, float y, ref Vector2 vector)
-        {
-            vector.x = x;
-            vector.y = y;
-        }
         
         /// <summary>
         /// Returns the magnitude of a Vector2. Magnitude can substitute lenght of a vector if measured from origin.
@@ -162,39 +150,6 @@ namespace Utility
             return new Vector3(vector.x /  magnitude, vector.y / magnitude, vector.z / magnitude);
         }
         
-        /// <summary>
-        /// Calculates a quaternion which is responsible for rotation an object about the X and Y axis
-        /// (heading and pitch). Calculate said quaternion based on an input vector.Takes a reference to an existing quaternion
-        /// </summary>
-        /// <param name="angle">the angle to rotate in degrees</param>
-        /// <param name="unitVector">unit vector to rotate around</param>
-        /// <param name="quat">quaternion to be modified</param>
-        public static void ConvertMouseVectorToQuaternionValue(float angle, Vector3 unitVector, ref Quaternion quat)
-        {
-            if (unitVector == Vector3.zero) return;
-            float sinusValue = Mathf.Sin((angle /2f));
-            quat.x = sinusValue * unitVector.x;
-            quat.y = sinusValue * unitVector.y;
-            quat.z = sinusValue * unitVector.z;
-            quat.w = Mathf.Cos((angle / 2f));
-        }
-        
-        /// <summary>
-        /// Calculates a quaternion which is responsible for rotation an object about the X and Y axis
-        /// (heading and pitch). Calculate said quaternion based on an input vector.Takes a reference to an existing quaternion
-        /// </summary>
-        /// <param name="angle">the angle to rotate in degrees</param>
-        /// <param name="unitVector">unit vector to rotate around</param>
-        /// <returns>returns a new quaternion</returns>>
-        public static Quaternion ConvertMouseVectorToQuaternionValue(float angle, Vector3 unitVector)
-        {
-            float sinusValue = Mathf.Sin(angle / 2f * Mathf.Deg2Rad);
-            return new Quaternion(
-                sinusValue * unitVector.x, 
-                sinusValue * unitVector.y, 
-                sinusValue * unitVector.z,
-                Mathf.Cos(angle / 2f * Mathf.Deg2Rad));
-        }
         
         /// <summary>
         /// Calculates a Quaternion with the unit lenght of 1 based on input Quaternion.
@@ -236,7 +191,7 @@ namespace Utility
         {
             Quaternion quatPosition = new Quaternion(position.x, position.y, position.z, 0f);
             Quaternion inverseQuaternion = InverseQuaternion(rotationQuaternion);
-            Quaternion rotatedPosition = FastMultiplyQuaternion(FastMultiplyQuaternion(rotationQuaternion, quatPosition), inverseQuaternion);
+            Quaternion rotatedPosition = MultiplyQuaternion(FastMultiplyQuaternion(rotationQuaternion, quatPosition), inverseQuaternion);
 
             return new Vector3(rotatedPosition.x, rotatedPosition.y, rotatedPosition.z);
         }
@@ -304,7 +259,7 @@ namespace Utility
         /// <summary>
         /// Multiply a quaternion with another. Takes two quaternions as input and returns the product of said quaternions
         /// see https://gamemath.com/book/orient.html#quaternion_cross_product for details. Assumes either
-        /// one of the w component is equal to zero. Thus, Operations requires fewer instructions
+        /// one of the w component is equal to zero. Thus, Operation requires fewer instructions
         /// </summary>
         /// <param name="q1">First Quaternion</param>
         /// <param name="q2">Second Quaternion</param>
@@ -314,7 +269,7 @@ namespace Utility
             Vector3 v1 = new Vector3(q1.x, q1.y, q1.z);
             Vector3 v2 = new Vector3(q2.x, q2.y, q2.z);
             Vector3 newVector = q1.w * v2 + q2.w * v1 + CrossProduct(v1, v2);
-            return new Quaternion(newVector.x, newVector.y, newVector.z, 0f);
+            return new Quaternion(newVector.x, newVector.y, newVector.z, -DotProduct(v1, v2));
         }
 
         /// <summary>
@@ -329,6 +284,23 @@ namespace Utility
             float x = quat.value.x, y = quat.value.y, z = quat.value.z, w = quat.value.w;
             float pitch = Mathf.Asin(-2 * (y * z - w * x));
             float heading = pitch != 0f ? Mathf.Atan2(x * z + w * y, (-(x * x) - (y * y)) / 2f) : Mathf.Atan2(-x * z + w * y, (-(y*y) - (z*z)) / 2f);
+            // om man behöver bank så läggs den till här!
+            float bank = pitch != 0f ? 0f : 0f;
+            return new Vector3(heading, pitch, bank) * Mathf.Rad2Deg;
+        }
+    
+        /// <summary>
+        /// Convert a Quaternion to Vector3 containing Heading, Pitch and Roll rotations.
+        /// See https://gamemath.com/book/orient.html#quaternion_to_euler_angles for details
+        /// </summary>
+        /// <param name="quat"></param>
+        /// <returns></returns>
+        public static Vector3 ConvertQuaternionToEulerAngles(Quaternion quat)
+        {
+            // lättare att läsa anser jag
+            float x = quat.x, y = quat.y, z = quat.z, w = quat.w;
+            float pitch = Mathf.Asin(-2 * (y * z - w * x));
+            float heading = Mathf.Cos(pitch) != 0f ? Mathf.Atan2(x * z + w * y, (-(x * x) - (y * y)) / 2f) : Mathf.Atan2(-x * z + w * y, (-(y*y) - (z*z)) / 2f);
             // om man behöver bank så läggs den till här!
             float bank = pitch != 0f ? 0f : 0f;
             return new Vector3(heading, pitch, bank) * Mathf.Rad2Deg;
