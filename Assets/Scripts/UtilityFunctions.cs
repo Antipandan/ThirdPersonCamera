@@ -9,43 +9,6 @@ namespace Utility
     public static class UtilityFunctions
     {
         /// <summary>
-        /// Faster way of getting the sign of a float. Difference is slim compared to mathf implementation
-        /// </summary>
-        /// <param name="number">number to get sign of</param>
-        /// <returns>the sign as +- 1</returns>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static int GetSign(float number)
-        {
-            return (((int) number >> 31) * 2) + 1;
-        }
-        
-        /*
-        // tagen från https://learn.microsoft.com/en-us/dotnet/csharp/language-reference/operators/sizeof
-        // används för att kolla storleken på en datatyp om det skulle behövas.
-        /// <summary>
-        /// Use when you want to write to the console the size of a type e.g int, float, Vector2, custom structs & classes
-        /// </summary>
-        /// <typeparam name="T">the type to get the sizeof</typeparam>
-        public static unsafe void DisplaySizeOf<T>() where T : unmanaged
-        {
-            Debug.Log($"Size of {typeof(T)} is {sizeof(T)} bytes");
-        }
-        */
-
-        /// <summary>
-        /// Get the dot product of two Vector2 instances.
-        /// see https://gamemath.com/book/vectors.html#cross_product#dot_product for equation
-        /// </summary>
-        /// <param name="v1">First Vector2</param>
-        /// <param name="v2">Second Vector2</param>
-        /// <returns>Scalar representing the dot product</returns>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static float DotProduct(Vector2 v1, Vector2 v2)
-        {
-            return v1.x * v2.x + v1.y * v2.y;     
-        }
-        
-        /// <summary>
         /// Get the dot product of two Vector3 instances
         /// see https://gamemath.com/book/vectors.html#cross_product#dot_product for equation
         /// </summary>
@@ -96,33 +59,6 @@ namespace Utility
         {
             return Mathf.Sqrt(vector.x * vector.x + vector.y * vector.y + vector.z * vector.z);
         }
-
-        /// <summary>
-        /// Calculates a normalized Vector2 of a given Vector2. Takes a reference to an existing Vector2
-        /// see https://gamemath.com/book/vectors.html#normalized_vectors for details
-        /// </summary>
-        /// <param name="vector">Vector2 instance to turn into a normalized Vector2</param>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static void NormalizeVector(ref Vector2 vector)
-        {
-            float magnitude = GetMagnitudeOfVector(vector);
-            vector.x /= magnitude;
-            vector.y /= magnitude;
-        }
-
-        /// <summary>
-        /// Calculates a normalized Vector3 of a given Vector3. Takes a reference to an existing Vector3
-        /// see https://gamemath.com/book/vectors.html#normalized_vectors for details
-        /// </summary>
-        /// <param name="vector">Vector3 instance to turn into a normalized Vector2</param>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static void NormalizeVector(ref Vector3 vector)
-        {
-            float magnitude = GetMagnitudeOfVector(vector);
-            vector.x /= magnitude;
-            vector.y /= magnitude;
-            vector.z /= magnitude;
-        }
         
         /// <summary>
         /// Calculates a normalized Vector2 of a given Vector2.
@@ -135,48 +71,6 @@ namespace Utility
         {
             float magnitude = GetMagnitudeOfVector(vector);
             return new Vector2(vector.x / magnitude, vector.y / magnitude);
-        }
-
-        /// <summary>
-        /// Calculates a normalized Vector3 of a given Vector3.
-        /// see https://gamemath.com/book/vectors.html#normalized_vectors for details
-        /// </summary>
-        /// <param name="vector">Vector3 instance to turn into a normalized Vector3</param>
-        /// <returns>Returns a normalized Vector3</returns>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Vector3 NormalizeVector(Vector3 vector)
-        {
-            float magnitude = GetMagnitudeOfVector(vector);
-            return new Vector3(vector.x /  magnitude, vector.y / magnitude, vector.z / magnitude);
-        }
-        
-        
-        /// <summary>
-        /// Calculates a Quaternion with the unit lenght of 1 based on input Quaternion.
-        /// See https://gamemath.com/book/orient.html#quaternion_definition for how quaternion is composed and
-        /// https://gamemath.com/book/vectors.html#infinite_vectors_with_same_magnitude figure 2.16 to normalize a vector v
-        /// </summary>
-        /// <param name="quat">Quaternion to produce new normalized Quaternion</param>
-        /// <returns>Quaternion with unit lenght of 1</returns>
-        public static Quaternion NormalizeQuaternion(Quaternion quat)
-        {
-            float magnitude = GetMagnitudeQuaternion(quat);
-            return new Quaternion(quat.x / magnitude, quat.y / magnitude, quat.z / magnitude, quat.w);
-        }
-        
-        /// <summary>
-        /// Create a quaternion based on an angle and how many degrees to rotate around said angle
-        /// </summary>
-        /// <param name="axis">The axis to rotate around</param>
-        /// <param name="angleDegrees">number of degrees to rotate around said axis</param>
-        /// <returns>Quaternion used to rotate an object around the given axis and angle</returns>
-        public static Quaternion AxisAngleQuaternion(Vector3 axis, float angleDegrees)
-        {
-            float angleRad = angleDegrees * Mathf.Deg2Rad * 0.5f;
-            float sinusValue = Mathf.Sin(angleRad);
-            float cosinusValue = Mathf.Cos(angleRad);
-            // ifall quaternion inte är normaliserad så orsakar det att kameran aliaser och närmar sig pivot vid vissa heading och pitch vinklar????
-            return new Quaternion(axis.x * sinusValue, axis.y * sinusValue, axis.z * sinusValue, cosinusValue).normalized;
         }
         
         /// <summary>
@@ -270,40 +164,6 @@ namespace Utility
             Vector3 v2 = new Vector3(q2.x, q2.y, q2.z);
             Vector3 newVector = q1.w * v2 + q2.w * v1 + CrossProduct(v1, v2);
             return new Quaternion(newVector.x, newVector.y, newVector.z, -DotProduct(v1, v2));
-        }
-
-        /// <summary>
-        /// Convert a Quaternion to Vector3 containing Heading, Pitch and Roll rotations.
-        /// See https://gamemath.com/book/orient.html#quaternion_to_euler_angles for details
-        /// </summary>
-        /// <param name="quat"></param>
-        /// <returns></returns>
-        public static Vector3 ConvertQuaternionToEulerAngles(quaternion quat)
-        {
-            // lättare att läsa anser jag
-            float x = quat.value.x, y = quat.value.y, z = quat.value.z, w = quat.value.w;
-            float pitch = Mathf.Asin(-2 * (y * z - w * x));
-            float heading = pitch != 0f ? Mathf.Atan2(x * z + w * y, (-(x * x) - (y * y)) / 2f) : Mathf.Atan2(-x * z + w * y, (-(y*y) - (z*z)) / 2f);
-            // om man behöver bank så läggs den till här!
-            float bank = pitch != 0f ? 0f : 0f;
-            return new Vector3(heading, pitch, bank) * Mathf.Rad2Deg;
-        }
-    
-        /// <summary>
-        /// Convert a Quaternion to Vector3 containing Heading, Pitch and Roll rotations.
-        /// See https://gamemath.com/book/orient.html#quaternion_to_euler_angles for details
-        /// </summary>
-        /// <param name="quat"></param>
-        /// <returns></returns>
-        public static Vector3 ConvertQuaternionToEulerAngles(Quaternion quat)
-        {
-            // lättare att läsa anser jag
-            float x = quat.x, y = quat.y, z = quat.z, w = quat.w;
-            float pitch = Mathf.Asin(-2 * (y * z - w * x));
-            float heading = Mathf.Cos(pitch) != 0f ? Mathf.Atan2(x * z + w * y, (-(x * x) - (y * y)) / 2f) : Mathf.Atan2(-x * z + w * y, (-(y*y) - (z*z)) / 2f);
-            // om man behöver bank så läggs den till här!
-            float bank = pitch != 0f ? 0f : 0f;
-            return new Vector3(heading, pitch, bank) * Mathf.Rad2Deg;
         }
         
         /// <summary>
