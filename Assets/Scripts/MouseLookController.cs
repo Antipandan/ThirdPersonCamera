@@ -122,9 +122,4 @@ public class MouseLookController : MonoBehaviour, IPauseable
     {
         startingPosition = gameObject.transform.position;
     }
-
-    private void OnValidate()
-    {
-        Debug.Log($"validate!");
-    }
 }
