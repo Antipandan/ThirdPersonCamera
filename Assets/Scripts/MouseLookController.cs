@@ -26,16 +26,18 @@ public class MouseLookController : MonoBehaviour, IPauseable
     [Header("Additional options")] 
     [SerializeField] private bool rotateObject = true;
     
+    [SerializeField]
+    private Vector3 startingPosition;
+    
+    
     private Vector3 currentMouseLookingDirection;
     private Vector3 objectLookAroundPosition;
     private VectorRenderer vectorRenderer;
     private const float tolerance = 1e-6f;
-    private Vector3 startingPosition;
     private InputAction lookAction;
     private bool isPaused;
     private float heading;
     private float pitch;
-    
     
     public bool IsPaused => isPaused;
 
@@ -114,5 +116,15 @@ public class MouseLookController : MonoBehaviour, IPauseable
     private void ChangeMouseSpeed(string newMouseSpeed)
     {
         float.TryParse(newMouseSpeed, out mouseSpeed);
+    }
+
+    public void ChangeCameraPosition()
+    {
+        startingPosition = gameObject.transform.position;
+    }
+
+    private void OnValidate()
+    {
+        Debug.Log($"validate!");
     }
 }
