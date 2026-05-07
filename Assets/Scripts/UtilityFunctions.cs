@@ -74,6 +74,19 @@ namespace Utility
         }
         
         /// <summary>
+        /// Calculates a normalized Vector3 of a given Vector3.
+        /// see https://gamemath.com/book/vectors.html#normalized_vectors for details
+        /// </summary>
+        /// <param name="vector">Vector3 instance to turn into a normalized Vector3</param>
+        /// <returns>Returns a normalized Vector3</returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Vector3 NormalizeVector(Vector3 vector)
+        {
+            float magnitude = GetMagnitudeOfVector(vector);
+            return new Vector3(vector.x /  magnitude, vector.y / magnitude, vector.z / magnitude);
+        }
+        
+        /// <summary>
         /// Rotate a position around a given Quaternion. Does not rotate around a custom pivot point.
         /// Pivot point is origo in worldspace. In order to rotate around a pivot point subtract the position of the object to be rotated,
         /// with the position of the pivot point. Add the position of the pivot point to the return value of this function

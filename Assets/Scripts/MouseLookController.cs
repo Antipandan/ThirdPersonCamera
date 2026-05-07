@@ -1,6 +1,7 @@
 using System;
 using System.Runtime.CompilerServices;
 using DefaultNamespace;
+using JetBrains.Annotations;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using Utility;
@@ -12,24 +13,21 @@ public class MouseLookController : MonoBehaviour, IPauseable
     [SerializeField]
     private CustomEvents events;
     
-    [SerializeField]
+    [Header("Settings")] [SerializeField]
     private Transform objectToRotateAround;
     
-    [SerializeField]
-    private float mouseSpeed = 1.0f;
-
+    [SerializeField] private float mouseSpeed = 1.0f;
+    
     [SerializeField] private bool allowLimitLessPitch = false;
     [SerializeField] [Range(0f, 90f)] private float maxPitch = 80f;
+    
     [SerializeField] private bool allowLimitLessHeading = false;
     [SerializeField] [Range(0f, 180f)] private float maxHeading = 90f;
-
-    [Header("Additional options")] 
+    
     [SerializeField] private bool rotateObject = true;
     
-    [SerializeField]
-    private Vector3 startingPosition;
+    [SerializeField] private Vector3 startingPosition;
     
-    private Vector3 currentCameraPointingDirection;
     private Vector3 currentMouseLookingDirection;
     private Vector3 objectLookAroundPosition;
     private VectorRenderer vectorRenderer;
@@ -91,16 +89,15 @@ public class MouseLookController : MonoBehaviour, IPauseable
         {
             UpdateRotationAngles(look);
             Vector2 normalizedLook = UtilityFunctions.NormalizeVector(look);
-            currentMouseLookingDirection = new Vector3(normalizedLook.y, -normalizedLook.x, 0f);
+            currentMouseLookingDirection = new Vector3(normalizedLook.x, normalizedLook.y, 0f);
             Quaternion rotation = UtilityFunctions.ConvertEulerToQuaternion(new Vector3(heading, pitch, 0f));
             Vector3 newPosition = UtilityFunctions.RotatePosition(rotation, startingPosition - objectLookAroundPosition);
             gameObject.transform.position = newPosition + objectLookAroundPosition;
             // jag tänker inte lista ut det här själv ok! 
             if (rotateObject) gameObject.transform.rotation = rotation;
-            currentCameraPointingDirection = new Vector3(rotation.x, rotation.y, rotation.z);
-            UtilityFunctions.nor
         }
     }
+    
     
     private void UpdateRotationAngles(Vector2 mouseVector)
     {
