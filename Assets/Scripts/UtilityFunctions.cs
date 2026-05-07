@@ -314,7 +314,7 @@ namespace Utility
             Vector3 v1 = new Vector3(q1.x, q1.y, q1.z);
             Vector3 v2 = new Vector3(q2.x, q2.y, q2.z);
             Vector3 newVector = q1.w * v2 + q2.w * v1 + CrossProduct(v1, v2);
-            return new Quaternion(newVector.x, newVector.y, newVector.z, 0f);
+            return new Quaternion(newVector.x, newVector.y, newVector.z, -DotProduct(v1, v2));
         }
 
         /// <summary>
