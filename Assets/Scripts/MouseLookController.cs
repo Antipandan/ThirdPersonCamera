@@ -56,7 +56,6 @@ public class MouseLookController : MonoBehaviour, IPauseable
         lookAction = InputSystem.actions.FindAction("Look");
         objectLookAroundPosition = objectToRotateAround != null ? objectToRotateAround.position : new Vector3(0f, 0f, 0f);
         startingPosition = transform.position;
-        Debug.Log($"awake! Starting position: {startingPosition}");
     }
 
     private void SubscribeToEvents()
@@ -125,7 +124,6 @@ public class MouseLookController : MonoBehaviour, IPauseable
 
     private void OnValidate()
     {
-        Debug.Log($"validate!");
         gameObject.transform.position = startingPosition;
     }
 }
