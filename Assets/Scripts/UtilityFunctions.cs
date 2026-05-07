@@ -19,6 +19,7 @@ namespace Utility
             return (((int) number >> 31) * 2) + 1;
         }
         
+        /*
         // tagen från https://learn.microsoft.com/en-us/dotnet/csharp/language-reference/operators/sizeof
         // används för att kolla storleken på en datatyp om det skulle behövas.
         /// <summary>
@@ -29,6 +30,7 @@ namespace Utility
         {
             Debug.Log($"Size of {typeof(T)} is {sizeof(T)} bytes");
         }
+        */
 
         /// <summary>
         /// Get the dot product of two Vector2 instances.
