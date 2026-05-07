@@ -29,14 +29,16 @@ public class MouseLookController : MonoBehaviour, IPauseable
     [SerializeField]
     private Vector3 startingPosition;
     
+    private Vector3 currentCameraPointingDirection;
     private Vector3 currentMouseLookingDirection;
     private Vector3 objectLookAroundPosition;
     private VectorRenderer vectorRenderer;
-    private const float tolerance = 1e-6f;
+    private const float Tolerance = 1e-6f;
     private InputAction lookAction;
     private bool isPaused;
     private float heading;
     private float pitch;
+
     
     public bool IsPaused => isPaused;
 
@@ -95,6 +97,8 @@ public class MouseLookController : MonoBehaviour, IPauseable
             gameObject.transform.position = newPosition + objectLookAroundPosition;
             // jag tänker inte lista ut det här själv ok! 
             if (rotateObject) gameObject.transform.rotation = rotation;
+            currentCameraPointingDirection = new Vector3(rotation.x, rotation.y, rotation.z);
+            UtilityFunctions.nor
         }
     }
     
@@ -107,8 +111,8 @@ public class MouseLookController : MonoBehaviour, IPauseable
 
     private void UpdateRotationAngles()
     {
-        if (!allowLimitLessHeading) heading = Mathf.Clamp(heading, -0.5f * maxHeading + tolerance, 0.5f * maxHeading - tolerance);
-        if (!allowLimitLessPitch) pitch = Mathf.Clamp(pitch, -0.5f * maxPitch + tolerance, 0.5f * maxPitch - tolerance);
+        if (!allowLimitLessHeading) heading = Mathf.Clamp(heading, -0.5f * maxHeading + Tolerance, 0.5f * maxHeading - Tolerance);
+        if (!allowLimitLessPitch) pitch = Mathf.Clamp(pitch, -0.5f * maxPitch + Tolerance, 0.5f * maxPitch - Tolerance);
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
