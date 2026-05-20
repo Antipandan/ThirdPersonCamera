@@ -24,7 +24,7 @@ public class MouseLookController : MonoBehaviour, IPauseable
     [SerializeField] private bool allowLimitLessHeading = false;
     [SerializeField] [Range(0f, 180f)] private float maxHeading = 90f;
     
-    [SerializeField] private bool rotateObject = true;
+    [SerializeField] private bool rotateCamera = true;
     
     [SerializeField] private Vector3 startingPosition;
     
@@ -94,7 +94,7 @@ public class MouseLookController : MonoBehaviour, IPauseable
             Vector3 newPosition = UtilityFunctions.RotatePosition(rotation, startingPosition - objectLookAroundPosition);
             gameObject.transform.position = newPosition + objectLookAroundPosition;
             // jag tänker inte lista ut det här själv ok! 
-            if (rotateObject) gameObject.transform.rotation = rotation;
+            if (rotateCamera) gameObject.transform.rotation = rotation;
         }
     }
     
