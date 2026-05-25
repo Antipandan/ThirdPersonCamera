@@ -13329,13 +13329,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   events: {fileID: 1498205445}
-  objectToRotateAround: {fileID: 1522075679}
+  objectToRotateAround: {fileID: 1489002861}
   mouseSpeed: 3
   allowLimitLessPitch: 0
   maxPitch: 0
   allowLimitLessHeading: 1
   maxHeading: 0
-  rotateCamera: 1
+  lookTowardsRotationPoint: 1
   startingPosition: {x: 17.67, y: 1.12, z: -1.14}
 --- !u!114 &1498205444
 MonoBehaviour:

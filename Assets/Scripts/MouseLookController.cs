@@ -4,6 +4,7 @@ using DefaultNamespace;
 using JetBrains.Annotations;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.Serialization;
 using Utility;
 using Vectors;
 
@@ -24,7 +25,7 @@ public class MouseLookController : MonoBehaviour, IPauseable
     [SerializeField] private bool allowLimitLessHeading = false;
     [SerializeField] [Range(0f, 180f)] private float maxHeading = 90f;
     
-    [SerializeField] private bool rotateCamera = true;
+    [SerializeField] private bool lookTowardsRotationPoint = true;
     
     [SerializeField] private Vector3 startingPosition;
     
@@ -75,11 +76,13 @@ public class MouseLookController : MonoBehaviour, IPauseable
         {
             MouseLook();
         }
-
-        using (vectorRenderer.Begin())
+        
+        /*
+         *         using (vectorRenderer.Begin())
         {
             vectorRenderer.Draw(objectLookAroundPosition, objectLookAroundPosition + currentMouseLookingDirection, Color.yellow);
         }
+         */
     }
 
     private void MouseLook()
@@ -94,7 +97,7 @@ public class MouseLookController : MonoBehaviour, IPauseable
             Vector3 newPosition = UtilityFunctions.RotatePosition(rotation, startingPosition - objectLookAroundPosition);
             gameObject.transform.position = newPosition + objectLookAroundPosition;
             // jag tänker inte lista ut det här själv ok! 
-            if (rotateCamera) gameObject.transform.rotation = rotation;
+            if (lookTowardsRotationPoint) gameObject.transform.rotation = rotation;
         }
     }
     
