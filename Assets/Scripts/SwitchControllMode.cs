@@ -22,7 +22,6 @@ namespace DefaultNamespace
 
         private void Start()
         {
-            // vill vara säker att spline Animate är sätt till false
             return;
         }
 

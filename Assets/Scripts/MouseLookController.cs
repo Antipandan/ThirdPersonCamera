@@ -77,12 +77,10 @@ public class MouseLookController : MonoBehaviour, IPauseable
             MouseLook();
         }
         
-        /*
-         *         using (vectorRenderer.Begin())
+        using (vectorRenderer.Begin())
         {
             vectorRenderer.Draw(objectLookAroundPosition, objectLookAroundPosition + currentMouseLookingDirection, Color.yellow);
         }
-         */
     }
 
     private void MouseLook()

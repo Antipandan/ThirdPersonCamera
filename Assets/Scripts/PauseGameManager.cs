@@ -16,7 +16,6 @@ public class PauseGameManager : MonoBehaviour
     private bool isPaused = false;
     private static PauseGameManager instance;
     
-
     public Action OnGamePause { get; set; }
     
     public bool IsPaused { get; }
