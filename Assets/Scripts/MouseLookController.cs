@@ -55,9 +55,13 @@ public class MouseLookController : MonoBehaviour, IPauseable
             throw new ArgumentNullException(nameof(events));
         }
         lookAction = InputSystem.actions.FindAction("Look");
+        SetupValues();
+    }
+
+    private void SetupValues()
+    {
         objectLookAroundPosition = objectToRotateAround != null ? objectToRotateAround.position : new Vector3(0f, 0f, 0f);
         startingPosition = transform.position;
-        pitch = 0;
         SetRelativeAngles();
     }
 
@@ -69,7 +73,8 @@ public class MouseLookController : MonoBehaviour, IPauseable
         float distance =
             Mathf.Sqrt(Mathf.Pow(
                 UtilityFunctions.GetMagnitudeOfVector(gameObject.transform.position - objectLookAroundPosition), 2));
-        heading = Mathf.Atan2(deltaZ, deltaX) * Mathf.Rad2Deg;
+        heading = (Mathf.Atan2(deltaZ, deltaX) * Mathf.Rad2Deg) + 90f;
+        heading = 0f;
         pitch = Mathf.Asin(deltaY / distance) * Mathf.Rad2Deg;
     }
 
@@ -149,6 +154,6 @@ public class MouseLookController : MonoBehaviour, IPauseable
     private void OnValidate()
     {
         gameObject.transform.position = startingPosition;
-        UtilityFunctions.PreventFunctionsRunningInEditor(SetRelativeAngles);
+        UtilityFunctions.PreventFunctionsRunningInEditor(SetupValues);
     }
 }

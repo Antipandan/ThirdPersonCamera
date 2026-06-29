@@ -12964,13 +12964,13 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1498205426}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: -0.37864852, z: 0, w: 0.92554057}
-  m_LocalPosition: {x: 19.45, y: 1.12, z: 1.34}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 18.097, y: 1.12, z: 0.793}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 430301633}
-  m_LocalEulerAnglesHint: {x: 0, y: -44.5, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!81 &1498205429
 AudioListener:
   m_ObjectHideFlags: 0
@@ -13302,10 +13302,10 @@ MonoBehaviour:
   mouseSpeed: 3
   allowLimitLessPitch: 0
   maxPitch: 0
-  allowLimitLessHeading: 0
+  allowLimitLessHeading: 1
   maxHeading: 85.5
   lookTowardsRotationPoint: 1
-  startingPosition: {x: 19.45, y: 1.12, z: 1.34}
+  startingPosition: {x: 18.097, y: 1.12, z: 0.793}
 --- !u!114 &1498205444
 MonoBehaviour:
   m_ObjectHideFlags: 0
