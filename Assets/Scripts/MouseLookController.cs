@@ -57,6 +57,20 @@ public class MouseLookController : MonoBehaviour, IPauseable
         lookAction = InputSystem.actions.FindAction("Look");
         objectLookAroundPosition = objectToRotateAround != null ? objectToRotateAround.position : new Vector3(0f, 0f, 0f);
         startingPosition = transform.position;
+        pitch = 0;
+        SetRelativeAngles();
+    }
+
+    private void SetRelativeAngles()
+    {
+        float deltaX = startingPosition.x - objectToRotateAround.position.x;
+        float deltaY = startingPosition.y - objectToRotateAround.position.y;
+        float deltaZ = startingPosition.z - objectToRotateAround.position.z;
+        float distance =
+            Mathf.Sqrt(Mathf.Pow(
+                UtilityFunctions.GetMagnitudeOfVector(gameObject.transform.position - objectLookAroundPosition), 2));
+        heading = Mathf.Atan2(deltaZ, deltaX) * Mathf.Rad2Deg;
+        pitch = Mathf.Asin(deltaY / distance) * Mathf.Rad2Deg;
     }
 
     private void SubscribeToEvents()
@@ -94,8 +108,16 @@ public class MouseLookController : MonoBehaviour, IPauseable
             Quaternion rotation = UtilityFunctions.ConvertEulerToQuaternion(new Vector3(heading, pitch, 0f));
             Vector3 newPosition = UtilityFunctions.RotatePosition(rotation, startingPosition - objectLookAroundPosition);
             gameObject.transform.position = newPosition + objectLookAroundPosition;
+            Debug.Log($"heading: {heading}, pitch: {pitch}");
             // jag tänker inte lista ut det här själv ok! 
-            if (lookTowardsRotationPoint) gameObject.transform.rotation = rotation;
+            if (lookTowardsRotationPoint)
+            {
+                float deltaX = objectLookAroundPosition.x - gameObject.transform.position.x;
+                float deltaY = objectToRotateAround.position.y - gameObject.transform.position.y;
+                float deltaZ = objectToRotateAround.position.z - gameObject.transform.position.z;
+                Debug.Log($"atan2: {Mathf.Atan2(deltaZ, deltaX) * Mathf.Rad2Deg}");
+                gameObject.transform.rotation = rotation;
+            }
         }
     }
     
@@ -127,5 +149,6 @@ public class MouseLookController : MonoBehaviour, IPauseable
     private void OnValidate()
     {
         gameObject.transform.position = startingPosition;
+        UtilityFunctions.PreventFunctionsRunningInEditor(SetRelativeAngles);
     }
 }

@@ -147,6 +147,11 @@ namespace Utility
                 conjugateQuaternion.w / magnitude);
         }
         
+        public static Quaternion RelativeQuaternion(Quaternion q1, Quaternion q2)
+        {
+            return MultiplyQuaternion(q2, inverse(q1));
+        }
+        
         /// <summary>
         /// Multiply a quaternion with another. Takes two quaternions as input and returns the product of said quaternions
         /// see https://gamemath.com/book/orient.html#quaternion_cross_product for details
@@ -195,6 +200,15 @@ namespace Utility
                 sin(heading / 2f) * cos(pitch / 2f) * cos(bank / 2f) - cos(heading / 2f) * sin(pitch / 2f) * sin(bank / 2f),
                 cos(heading / 2f) * cos(pitch / 2f) * sin(bank / 2f) - sin(heading / 2f) * sin(pitch / 2f) * cos(bank / 2f), 
                 cos(heading / 2f) * cos(pitch / 2f) * cos(bank / 2f) + sin(heading / 2f) * sin(bank / 2f) * sin(bank / 2f));
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static void PreventFunctionsRunningInEditor(params Action[] functionsToRun)
+        {
+            foreach (Action function in functionsToRun)
+            {
+                if (UnityEditor.EditorApplication.isPlaying) function();
+            }
         }
 
     }
