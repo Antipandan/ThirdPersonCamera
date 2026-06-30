@@ -73,9 +73,9 @@ public class MouseLookController : MonoBehaviour, IPauseable
         float distance =
             Mathf.Sqrt(Mathf.Pow(
                 UtilityFunctions.GetMagnitudeOfVector(startingPosition - objectLookAroundPosition), 2));
-        heading = (Mathf.Atan2(deltaZ, deltaX) * Mathf.Rad2Deg) + 90f;
         heading = 0f;
         pitch = Mathf.Asin(deltaY / distance) * Mathf.Rad2Deg;
+        pitch = 0f;
     }
 
     private void SubscribeToEvents()
@@ -114,15 +114,8 @@ public class MouseLookController : MonoBehaviour, IPauseable
             Vector3 newPosition = UtilityFunctions.RotatePosition(rotation, startingPosition - objectLookAroundPosition);
             gameObject.transform.position = newPosition + objectLookAroundPosition;
             Debug.Log($"heading: {heading}, pitch: {pitch}");
-            // jag tänker inte lista ut det här själv ok! 
-            if (lookTowardsRotationPoint)
-            {
-                float deltaX = objectLookAroundPosition.x - gameObject.transform.position.x;
-                float deltaY = objectToRotateAround.position.y - gameObject.transform.position.y;
-                float deltaZ = objectToRotateAround.position.z - gameObject.transform.position.z;
-                Debug.Log($"atan2: {Mathf.Atan2(deltaZ, deltaX) * Mathf.Rad2Deg}");
-                gameObject.transform.rotation = rotation;
-            }
+            // jag tänker inte lista ut det här själv ok?
+            if (lookTowardsRotationPoint) transform.LookAt(objectLookAroundPosition);
         }
     }
     
