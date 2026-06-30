@@ -12654,10 +12654,10 @@ MonoBehaviour:
   events: {fileID: 1498205445}
   objectToRotateAround: {fileID: 1522075679}
   mouseSpeed: 3
-  allowLimitLessPitch: 1
+  allowLimitLessPitch: 0
   maxPitch: 0
   allowLimitLessHeading: 0
-  maxHeading: 75.3
+  maxHeading: 90
   lookTowardsRotationPoint: 1
   startingPosition: {x: 18.668, y: 1.12, z: -2.154}
 --- !u!114 &1498205444

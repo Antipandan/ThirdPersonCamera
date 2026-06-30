@@ -67,14 +67,7 @@ public class MouseLookController : MonoBehaviour, IPauseable
 
     private void SetRelativeAngles()
     {
-        float deltaY = startingPosition.y - objectLookAroundPosition.y;
-        float deltaZ = startingPosition.z - objectLookAroundPosition.z;
-        float deltaX = startingPosition.x - objectLookAroundPosition.x;
-        float distance =
-            Mathf.Sqrt(Mathf.Pow(
-                UtilityFunctions.GetMagnitudeOfVector(startingPosition - objectLookAroundPosition), 2));
         heading = 0f;
-        pitch = Mathf.Asin(deltaY / distance) * Mathf.Rad2Deg;
         pitch = 0f;
     }
 
@@ -113,7 +106,6 @@ public class MouseLookController : MonoBehaviour, IPauseable
             Quaternion rotation = UtilityFunctions.ConvertEulerToQuaternion(new Vector3(heading, pitch, 0f));
             Vector3 newPosition = UtilityFunctions.RotatePosition(rotation, startingPosition - objectLookAroundPosition);
             gameObject.transform.position = newPosition + objectLookAroundPosition;
-            Debug.Log($"heading: {heading}, pitch: {pitch}");
             // jag tänker inte lista ut det här själv ok?
             if (lookTowardsRotationPoint) transform.LookAt(objectLookAroundPosition);
         }
