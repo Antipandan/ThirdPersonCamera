@@ -12654,6 +12654,8 @@ MonoBehaviour:
   events: {fileID: 1498205445}
   objectToRotateAround: {fileID: 1522075679}
   mouseSpeed: 3
+  useStaticMouseMovement: 1
+  staticMouseMovement: {x: 1, y: 1}
   allowLimitLessPitch: 0
   maxPitch: 0
   allowLimitLessHeading: 0

@@ -18,6 +18,9 @@ public class MouseLookController : MonoBehaviour, IPauseable
     private Transform objectToRotateAround;
     
     [SerializeField] private float mouseSpeed = 1.0f;
+
+    [SerializeField] private bool useStaticMouseMovement = false;
+    [SerializeField] private Vector2 staticMouseMovement;
     
     [SerializeField] private bool allowLimitLessPitch = false;
     [SerializeField] [Range(0f, 90f)] private float maxPitch = 80f;
@@ -97,7 +100,9 @@ public class MouseLookController : MonoBehaviour, IPauseable
 
     private void MouseLook()
     {
-        Vector2 look = lookAction.ReadValue<Vector2>() * (Time.deltaTime * mouseSpeed * 10f);
+        Vector2 look = staticMouseMovement;
+        if (!useStaticMouseMovement) look = lookAction.ReadValue<Vector2>();
+        look *= Time.deltaTime * mouseSpeed * 10f;
         if (look != Vector2.zero)
         {
             UpdateRotationAngles(look);
