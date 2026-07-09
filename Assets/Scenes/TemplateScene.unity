@@ -12655,10 +12655,10 @@ MonoBehaviour:
   objectToRotateAround: {fileID: 1522075679}
   mouseSpeed: 3
   useStaticMouseMovement: 1
-  staticMouseMovement: {x: 1, y: 1}
-  allowLimitLessPitch: 0
+  staticMouseMovement: {x: 1, y: 0}
+  allowLimitLessPitch: 1
   maxPitch: 0
-  allowLimitLessHeading: 0
+  allowLimitLessHeading: 1
   maxHeading: 90
   lookTowardsRotationPoint: 1
   startingPosition: {x: 18.61, y: 0.99, z: -2.084}
