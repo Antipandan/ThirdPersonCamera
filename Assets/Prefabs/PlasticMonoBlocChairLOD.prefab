@@ -113,6 +113,10 @@ PrefabInstance:
       propertyPath: m_CastShadows
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: -7511558181221131132, guid: d7cc8df4984fd15468efb7a1d9f821bc, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: dfc08c90188302847afb04f628582097, type: 2}
     - target: {fileID: 919132149155446097, guid: d7cc8df4984fd15468efb7a1d9f821bc, type: 3}
       propertyPath: m_Name
       value: plastic_monobloc_chair_01_1k_LOD2
@@ -188,6 +192,10 @@ PrefabInstance:
       propertyPath: m_CastShadows
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: -7511558181221131132, guid: 31e15c8eebc70384d84d7c1b6637946d, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: dfc08c90188302847afb04f628582097, type: 2}
     - target: {fileID: 919132149155446097, guid: 31e15c8eebc70384d84d7c1b6637946d, type: 3}
       propertyPath: m_Name
       value: plastic_monobloc_chair_01_1k_LOD1

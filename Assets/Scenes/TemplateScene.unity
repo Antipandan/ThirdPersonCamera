@@ -5226,7 +5226,6 @@ Transform:
   - {fileID: 5932607968534588689}
   - {fileID: 1328063}
   - {fileID: 1489002861}
-  - {fileID: 8427216598965788558}
   - {fileID: 1786126984}
   - {fileID: 1540575538}
   m_Father: {fileID: 919758297}
@@ -12657,7 +12656,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   events: {fileID: 1498205445}
   objectToRotateAround: {fileID: 1522075679}
-  mouseSpeed: 3
+  mouseSpeed: -1
   useStaticMouseMovement: 0
   staticMouseMovement: {x: 1, y: 0}
   allowLimitLessPitch: 1
@@ -18764,76 +18763,6 @@ PrefabInstance:
 Transform:
   m_CorrespondingSourceObject: {fileID: 6223502779714397018, guid: 87ab9885913ebd94b8489f47f5981bcc, type: 3}
   m_PrefabInstance: {fileID: 5932607968534588688}
-  m_PrefabAsset: {fileID: 0}
---- !u!1001 &8427216598965788557
-PrefabInstance:
-  m_ObjectHideFlags: 0
-  serializedVersion: 2
-  m_Modification:
-    serializedVersion: 3
-    m_TransformParent: {fileID: 568439061}
-    m_Modifications:
-    - target: {fileID: 1030830872110838296, guid: 004d01793e0248a40b9bd952cb00fa52, type: 3}
-      propertyPath: m_Name
-      value: Carpet
-      objectReference: {fileID: 0}
-    - target: {fileID: 1030830872110838296, guid: 004d01793e0248a40b9bd952cb00fa52, type: 3}
-      propertyPath: m_StaticEditorFlags
-      value: 125
-      objectReference: {fileID: 0}
-    - target: {fileID: 2041983348606577913, guid: 004d01793e0248a40b9bd952cb00fa52, type: 3}
-      propertyPath: m_LocalPosition.x
-      value: 9.13
-      objectReference: {fileID: 0}
-    - target: {fileID: 2041983348606577913, guid: 004d01793e0248a40b9bd952cb00fa52, type: 3}
-      propertyPath: m_LocalPosition.y
-      value: 0.04
-      objectReference: {fileID: 0}
-    - target: {fileID: 2041983348606577913, guid: 004d01793e0248a40b9bd952cb00fa52, type: 3}
-      propertyPath: m_LocalPosition.z
-      value: -2.77
-      objectReference: {fileID: 0}
-    - target: {fileID: 2041983348606577913, guid: 004d01793e0248a40b9bd952cb00fa52, type: 3}
-      propertyPath: m_LocalRotation.w
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 2041983348606577913, guid: 004d01793e0248a40b9bd952cb00fa52, type: 3}
-      propertyPath: m_LocalRotation.x
-      value: -0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2041983348606577913, guid: 004d01793e0248a40b9bd952cb00fa52, type: 3}
-      propertyPath: m_LocalRotation.y
-      value: -0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2041983348606577913, guid: 004d01793e0248a40b9bd952cb00fa52, type: 3}
-      propertyPath: m_LocalRotation.z
-      value: -0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2041983348606577913, guid: 004d01793e0248a40b9bd952cb00fa52, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2041983348606577913, guid: 004d01793e0248a40b9bd952cb00fa52, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2041983348606577913, guid: 004d01793e0248a40b9bd952cb00fa52, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2829948782007590297, guid: 004d01793e0248a40b9bd952cb00fa52, type: 3}
-      propertyPath: m_CastShadows
-      value: 0
-      objectReference: {fileID: 0}
-    m_RemovedComponents: []
-    m_RemovedGameObjects: []
-    m_AddedGameObjects: []
-    m_AddedComponents: []
-  m_SourcePrefab: {fileID: 100100000, guid: 004d01793e0248a40b9bd952cb00fa52, type: 3}
---- !u!4 &8427216598965788558 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 2041983348606577913, guid: 004d01793e0248a40b9bd952cb00fa52, type: 3}
-  m_PrefabInstance: {fileID: 8427216598965788557}
   m_PrefabAsset: {fileID: 0}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
