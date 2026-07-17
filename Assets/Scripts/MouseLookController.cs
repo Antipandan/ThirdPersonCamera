@@ -103,21 +103,20 @@ public class MouseLookController : MonoBehaviour, IPauseable
         Vector2 look = staticMouseMovement;
         if (!useStaticMouseMovement) look = lookAction.ReadValue<Vector2>();
         look *= Time.deltaTime * mouseSpeed * 10f;
-        if (look != Vector2.zero)
+        if (look == Vector2.zero) return;
+        UpdateRotationAngles(look);
+        Vector2 normalizedLook = UtilityFunctions.NormalizeVector(look);
+        currentMouseLookingDirection = new Vector3(normalizedLook.x, normalizedLook.y, 0f);
+        Quaternion rotationX = UtilityFunctions.AngleAxisQuaternion(heading, Vector3.up);
+        Vector3 rightAxis = rotationX * Vector3.right;
+        Quaternion rotationY = UtilityFunctions.AngleAxisQuaternion(pitch, rightAxis);
+        Quaternion rotation = rotationY * rotationX;
+        Vector3 newPosition = UtilityFunctions.RotatePosition(rotation, startingPosition - objectLookAroundPosition);
+        gameObject.transform.position = newPosition + objectLookAroundPosition;
+        // jag tänker inte lista ut det här själv ok?
+        if (lookTowardsRotationPoint)
         {
-            UpdateRotationAngles(look);
-            Vector2 normalizedLook = UtilityFunctions.NormalizeVector(look);
-            currentMouseLookingDirection = new Vector3(normalizedLook.x, normalizedLook.y, 0f);
-            Quaternion rotationX = UtilityFunctions.AngleAxisQuaternion(heading, Vector3.up);
-            Quaternion rotationY = UtilityFunctions.AngleAxisQuaternion(pitch, gameObject.transform.right);
-            Quaternion rotation = rotationY * rotationX;
-            Vector3 newPosition = UtilityFunctions.RotatePosition(rotation, startingPosition - objectLookAroundPosition);
-            gameObject.transform.position = newPosition + objectLookAroundPosition;
-            // jag tänker inte lista ut det här själv ok?
-            if (lookTowardsRotationPoint)
-            {
-                transform.LookAt(objectLookAroundPosition);
-            }
+            transform.LookAt(objectLookAroundPosition, Vector3.up);
         }
     }
     
