@@ -11774,7 +11774,6 @@ GameObject:
   - component: {fileID: 1448987420}
   - component: {fileID: 1448987419}
   - component: {fileID: 1448987418}
-  - component: {fileID: 1448987422}
   m_Layer: 0
   m_Name: Base
   m_TagString: Untagged
@@ -11871,18 +11870,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 91705517}
   m_LocalEulerAnglesHint: {x: 0, y: 90, z: 0}
---- !u!114 &1448987422
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1448987417}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8faf4ef80cfb384479797e4c6376cc55, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &1449275070
 GameObject:
   m_ObjectHideFlags: 0
@@ -12370,7 +12357,7 @@ Transform:
   m_GameObject: {fileID: 1498205426}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 17.72, y: 0.296, z: -1.98}
+  m_LocalPosition: {x: 18.042, y: 0.296, z: -1.98}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -12664,7 +12651,7 @@ MonoBehaviour:
   allowLimitLessHeading: 1
   maxHeading: 90
   lookTowardsRotationPoint: 1
-  startingPosition: {x: 17.72, y: 0.296, z: -1.98}
+  startingPosition: {x: 18.042, y: 0.296, z: -1.98}
 --- !u!114 &1498205444
 MonoBehaviour:
   m_ObjectHideFlags: 0

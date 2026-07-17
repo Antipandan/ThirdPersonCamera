@@ -110,7 +110,7 @@ public class MouseLookController : MonoBehaviour, IPauseable
         Quaternion rotationX = UtilityFunctions.AngleAxisQuaternion(heading, Vector3.up);
         Vector3 rightAxis = rotationX * Vector3.right;
         Quaternion rotationY = UtilityFunctions.AngleAxisQuaternion(pitch, rightAxis);
-        Quaternion rotation = rotationY * rotationX;
+        Quaternion rotation = UtilityFunctions.MultiplyQuaternion(rotationY, rotationX);
         Vector3 newPosition = UtilityFunctions.RotatePosition(rotation, startingPosition - objectLookAroundPosition);
         gameObject.transform.position = newPosition + objectLookAroundPosition;
         // jag tänker inte lista ut det här själv ok?
@@ -148,6 +148,7 @@ public class MouseLookController : MonoBehaviour, IPauseable
     private void OnValidate()
     {
         gameObject.transform.position = startingPosition;
+        gameObject.transform.rotation = new Quaternion(0, 0, 0, 0);
         UtilityFunctions.PreventFunctionsRunningInEditor(SetupValues);
     }
 }
