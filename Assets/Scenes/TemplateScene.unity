@@ -12068,6 +12068,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: PlasticMonoBlocChairLOD (1)
       objectReference: {fileID: 0}
+    - target: {fileID: 6180992206708748748, guid: 87ab9885913ebd94b8489f47f5981bcc, type: 3}
+      propertyPath: m_LODs.Array.data[0].renderers.Array.data[0].renderer
+      value: 
+      objectReference: {fileID: 1825212433}
     - target: {fileID: 6223502779714397018, guid: 87ab9885913ebd94b8489f47f5981bcc, type: 3}
       propertyPath: m_LocalPosition.x
       value: 15.237
@@ -15826,6 +15830,11 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1790033180}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!23 &1825212433 stripped
+MeshRenderer:
+  m_CorrespondingSourceObject: {fileID: 4619523465034879688, guid: 87ab9885913ebd94b8489f47f5981bcc, type: 3}
+  m_PrefabInstance: {fileID: 1489002860}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1839853999
 GameObject:
   m_ObjectHideFlags: 0
