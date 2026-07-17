@@ -108,11 +108,16 @@ public class MouseLookController : MonoBehaviour, IPauseable
             UpdateRotationAngles(look);
             Vector2 normalizedLook = UtilityFunctions.NormalizeVector(look);
             currentMouseLookingDirection = new Vector3(normalizedLook.x, normalizedLook.y, 0f);
-            Quaternion rotation = UtilityFunctions.ConvertEulerToQuaternion(new Vector3(heading, pitch, 0f));
+            Quaternion rotationX = UtilityFunctions.AngleAxisQuaternion(heading, Vector3.up);
+            Quaternion rotationY = UtilityFunctions.AngleAxisQuaternion(pitch, gameObject.transform.right);
+            Quaternion rotation = rotationY * rotationX;
             Vector3 newPosition = UtilityFunctions.RotatePosition(rotation, startingPosition - objectLookAroundPosition);
             gameObject.transform.position = newPosition + objectLookAroundPosition;
             // jag tänker inte lista ut det här själv ok?
-            if (lookTowardsRotationPoint) transform.LookAt(objectLookAroundPosition);
+            if (lookTowardsRotationPoint)
+            {
+                transform.LookAt(objectLookAroundPosition);
+            }
         }
     }
     

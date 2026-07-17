@@ -210,6 +210,18 @@ namespace Utility
                 if (UnityEditor.EditorApplication.isPlaying) function();
             }
         }
+        
+        public static Quaternion AngleAxisQuaternion(float deltaAngle, Vector3 axis)
+        {
+            if (GetMagnitudeOfVector(axis) <= float.Epsilon) return Quaternion.identity;
+            Vector3 normalizedAxis = NormalizeVector(axis);
+            float halfRad = deltaAngle * Mathf.Deg2Rad;
+            return new Quaternion(
+                normalizedAxis.x * Mathf.Sin(halfRad), 
+                normalizedAxis.y * Mathf.Sin(halfRad), 
+                normalizedAxis.z * Mathf.Sin(halfRad), 
+                Mathf.Cos(halfRad));
+        }
 
     }
 }

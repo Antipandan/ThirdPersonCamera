@@ -12370,7 +12370,7 @@ Transform:
   m_GameObject: {fileID: 1498205426}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 18.61, y: 0.99, z: -2.084}
+  m_LocalPosition: {x: 18.675, y: 2.017, z: -1.527}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -12656,15 +12656,15 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   events: {fileID: 1498205445}
   objectToRotateAround: {fileID: 1522075679}
-  mouseSpeed: -1
+  mouseSpeed: 3
   useStaticMouseMovement: 0
   staticMouseMovement: {x: 1, y: 0}
-  allowLimitLessPitch: 1
-  maxPitch: 0
+  allowLimitLessPitch: 0
+  maxPitch: 80
   allowLimitLessHeading: 1
   maxHeading: 90
   lookTowardsRotationPoint: 1
-  startingPosition: {x: 18.61, y: 0.99, z: -2.084}
+  startingPosition: {x: 18.675, y: 2.017, z: -1.527}
 --- !u!114 &1498205444
 MonoBehaviour:
   m_ObjectHideFlags: 0
